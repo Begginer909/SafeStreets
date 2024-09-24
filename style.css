@@ -1,0 +1,35 @@
+li:hover{
+    background-color: lightgrey;
+}
+.active{
+    background-color: darkgrey;
+    font-weight: bold;
+}
+.border-responsive {
+    border: none;
+}
+@media (min-width: 800px) {
+    .border-responsive {
+        border-right: 1px solid white; /* Example border */
+    }
+}
+.nav1{
+    background-color: black;
+    height: 7rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+#map{
+    height: 500px;
+    width: 1000px;
+    border: 1px solid black;
+}
+#myChart{
+    height: 500px;
+    width: 1000px;
+}
+.map, #myChart{
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}

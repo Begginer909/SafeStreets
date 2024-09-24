@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> 
+
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md" style="background-color: #1f497d; height: 100%">
+        <div class="container-fluid">
+            <button class="navbar-toggler bg-light border-light" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="row mx-auto">
+                <a class="image" href="admin.html">
+                    <img src="Logo.png" safestreet_logo" class="img-fluid" width="150px" height="60">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav fs-3">
+                    <li class="selectedItem nav-item border-responsive">
+                        <a class="nav-link text-light" name="Home" aria-current="true" href="home.html">Home</a>
+                    </li>
+                    <li class="selectedItem nav-item  border-responsive">
+                        <a class="nav-link text-light" name="mapView" href="map.html">Map View</a>
+                    </li>
+                    <li class="selectedItem nav-item  border-responsive active">
+                        <a class="nav-link text-light" name="createReport" href="createReport.html">Create Report</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+    <script src="script.js"></script>
+</body>
+
+</html>
