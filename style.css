@@ -8,11 +8,12 @@ li:hover{
 .border-responsive {
     border: none;
 }
-@media (min-width: 800px) {
+@media (min-width: 965px) {
     .border-responsive {
         border-right: 1px solid white; /* Example border */
     }
 }
+
 .nav1{
     background-color: black;
     height: 7rem;
@@ -21,15 +22,46 @@ li:hover{
 }
 #map{
     height: 500px;
-    width: 1000px;
+    width: 100%;
+    max-width: 100%;
     border: 1px solid black;
 }
-#myChart{
+.sizeCanvas{
     height: 500px;
-    width: 1000px;
+    width: 100%;
+    max-width: 100%;
 }
-.map, #myChart{
-    max-width: fit-content;
+#myChart{
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+}
+.map, .sizeCanvas{
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media (min-width: 800px) {
+    .sizeCanvas{
+        border: 1px solid black;
+        max-width: 1000px;
+    }
+    .map{
+        max-width: 1000px;
+    }
+}   
+
+#content {
+    transition: width 0.5s ease; /* Smooth transition for the width adjustment */
+}
+
+#navbarCol {
+    transition: width 0.5s ease; /* Smooth transition for navbar as well */
+}
+
+.card:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.02);
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
