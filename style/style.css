@@ -1,26 +1,9 @@
-li:hover{
-    background-color: lightgrey;
-}
-
-nav-item.active .nav-link{
-    background-color: darkgrey;
-    font-weight: bold;
-}
-.border-responsive {
-    border: none;
-}
 @media (min-width: 965px) {
     .border-responsive {
         border-right: 1px solid white; /* Example border */
     }
 }
 
-.nav1{
-    background-color: black;
-    height: 7rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
 #map{
     height: 500px;
     width: 100%;
@@ -60,10 +43,4 @@ nav-item.active .nav-link{
 
 #navbarCol {
     transition: width 0.5s ease; /* Smooth transition for navbar as well */
-}
-
-.card:hover {
-    background-color: #f8f9fa;
-    transform: scale(1.02);
-    transition: transform 0.2s ease, background-color 0.2s ease;
 }

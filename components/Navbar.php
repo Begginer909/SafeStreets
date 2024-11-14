@@ -16,37 +16,31 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="items navbar-nav fs-3">
-                    <li class="border-responsive nav-item active">
+                <ul id="items" class="navbar-nav fs-3">
+                    <button type="button" class="selectedItem border-responsive active">
                         <a class="nav-link text-light" name="Home" aria-current="true" href="home.php">Home</a>
-                    </li>
-                    <li class="border-responsive nav-item">
+                    </button>
+                    <button type="button" class="selectedItem border-responsive">
                         <a class="nav-link text-light" name="mapView" href="map.php">Map View</a>
-                    </li>
-                    <li class="border-responsive nav-item">
+                    </button>
+                    <button type="button" class="selectedItem border-responsive">
                         <a class="nav-link text-light" name="createReport" href="createReport.php">Create Report</a>
-                    </li>
+                    </button>
                 </ul>
             </div>
         </div>
     </nav>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all the nav items
-            const navItems = document.querySelectorAll('.nav-item');
-
-            // Loop through all the items and add the click event listener
-            navItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Remove the 'active' class from all items
-                    navItems.forEach(i => i.classList.remove('active'));
-
-                    // Add the 'active' class to the clicked item
-                    this.classList.add('active');
-                });
+        var header = document.getElementById("items");
+        var btns = header.getElementsByClassName("selectedItem");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function() {
+                var current = document.getElementsByClassName("active");
+                current[0].className = current[0].className.replace(" active", "");
+                this.className += " active";
             });
-        });
+        }
     </script>
 
 </body>

@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> 
-    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
-</head>
+<?php
+    include('components/link.php');
+?>
 <body >
 
     <div class="container-fluid">  
@@ -136,6 +130,6 @@
     <script src="script/scriptMap.js"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
-    <script src="script.js"></script>
+    <script src="script/script.js"></script>
 </body>
 </html>

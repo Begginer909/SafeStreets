@@ -9,9 +9,8 @@
     <link rel="stylesheet" href="style/styleReport.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="script/scriptTest.js"></script>
     <script src=" https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
-    </script>   
+    </script>
 
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
 
