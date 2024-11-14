@@ -14,7 +14,6 @@ const navbar = document.getElementById('collapseWidthExample');
 const contentColumn = document.getElementById('content');
 const navbarCol = document.getElementById('navbarCol');
 
-
 const ctx = document.getElementById('myChart');
         
 const myChart = new Chart(ctx, {
@@ -51,13 +50,11 @@ navbar.addEventListener('show.bs.collapse', function () {
     contentColumn.style.width = '80%';
     navbarCol.style.width = '20%'; // Adjust the navbar column width accordingly
 
-    myChart.resize();
+
 });
 
 navbar.addEventListener('hide.bs.collapse', function () {
     // When the navbar is collapsed, expand the content to full width (col-12 equivalent)
     contentColumn.style.width = '92%';
     navbarCol.style.width = '8%';  // Hide the navbar when collapsed
-
-    myChart.resize();
 });

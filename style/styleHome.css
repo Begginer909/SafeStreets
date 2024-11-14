@@ -1,0 +1,71 @@
+li:hover{
+    background-color: lightgrey;
+}
+.active{
+    background-color: darkgrey;
+    font-weight: bold;
+}
+.border-responsive {
+    border: none;
+}
+@media (min-width: 800px) {
+    .border-responsive {
+        border-right: 1px solid white; /* Example border */
+    }
+}
+.nav1{
+    background-color: black;
+    height: 7rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+.home{
+    background-color: whitesmoke;
+    border: 3px solid #07143f ;
+    margin-right: auto;
+    font-weight: bold;
+}
+.icon{
+    color:black;
+    max-width: 100%;
+    max-height: 100%;
+}
+.divider{
+    width: 100%;
+    border-top: 1px solid #fff;
+}
+.event-images {
+    display: flex;
+    gap: 30px; /* Space between images */
+    margin-top: 15px;
+} 
+.image-container {
+    text-align: center;
+}
+.imageEvents{
+    max-width: 100%;
+    max-height: 100%
+}
+.image-container a {
+    text-decoration: none; /* Remove underline from links */
+    color: black; /* Change link color */
+}
+.image-container a:hover {
+    color: darkblue; /* Hover effect */
+}
+
+
+#map{
+    height: 500px;
+    width: 1000px;
+    border: 1px solid black;
+}
+#myChart{
+    height: 500px;
+    width: 1000px;
+}
+.map, #myChart{
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /> 
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
@@ -15,7 +15,7 @@
     
         <div class="row mx-2 mt-3 border border-dark">
 
-            <div class="col-1" id="navbarCol">
+            <div class="col-12 col-lg-1" id="navbarCol">
                 <nav class="navbar" id="navbar" >
                         <button class="navbar-toggler bg-light border-dark position-absolute top-0 start-25 mt-3" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample" aria-expanded="false"
@@ -95,7 +95,7 @@
 
                     <div class="col-12 mt-3">
                         <div class="sizeCanvas">
-                            <canvas id="myChart"></canvas>
+                            <canvas class="ms-lg-5" id="myChart"></canvas>
                         </div>
                     </div>
                     
@@ -115,53 +115,7 @@
     
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-    // Initialize the map
-    var map = L.map('map').setView([14.358083677714449, 121.0583616614907], 19);
 
-    // Add a tile layer (you can use different tile providers)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    window.addEventListener('resize', function () {
-        map.invalidateSize(); // Ensure the map resizes properly when the window is resized
-    });
-
-    // Create circles with default colors
-    var circleStreet4th = L.circle([14.358169425879144, 121.05766965157575], {
-        color: 'transparent',
-        fillColor: 'red', // Default color
-        fillOpacity: 0.5,
-        radius: 30
-    }).addTo(map);
-
-    var circleStreet5th = L.circle([14.358366906376673, 121.05825437313592], {
-        color: 'transparent',
-        fillColor: 'red', // Default color
-        fillOpacity: 0.5,
-        radius: 30
-    }).addTo(map);
-
-
-    var circleStreet2nd = L.circle([14.357803047123392, 121.05888201004971], {
-        color: 'transparent',
-        fillColor: 'red', // Default color
-        fillOpacity: 0.5,
-        radius: 30
-    }).addTo(map);
-
-    function updateColors() {
-        var inputColor = document.getElementById("inputColor").value.toLowerCase();
-
-        // Update the fill color of circles based on input
-        if (inputColor === "4th blue") {
-            circleStreet4th.setStyle({ fillColor: 'blue' });
-        } else if (inputColor === "5th blue") {
-            circleStreet5th.setStyle({ fillColor: 'blue' });
-        } else if (inputColor === "2nd blue") {
-            circleStreet2nd.setStyle({ fillColor: 'blue' });
-        }
-    }
     </script>
 
     <script>
@@ -179,6 +133,7 @@
         setInterval(updateTime, 1000);
     </script>
 
+    <script src="script/scriptMap.js"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
     <script src="script.js"></script>

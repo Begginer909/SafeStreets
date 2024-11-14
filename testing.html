@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Notification System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .notification-card {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+        .notification-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #FF4136;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        .notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Add New Report Form -->
+    <div class="mb-4">
+        <h3>Create a Report</h3>
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="reportMessage">Report Message</label>
+                <input type="text" id="reportMessage" class="form-control" placeholder="Enter report message" required>
+            </div>
+            <div class="form-group">
+                <label for="reportType">Report Type</label>
+                <select id="reportType" class="form-control">
+                    <option value="info">Info</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                    <option value="success">Success</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reportUrgency">Urgency</label>
+                <select id="reportUrgency" class="form-control">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Report</button>
+        </form>
+    </div>
+
+    <!-- Notification Card -->
+    <div class="card notification-card" onclick="showNotifications()" data-toggle="modal" data-target="#notificationModal">
+        <div class="card-body text-center">
+            <h5 class="card-title">Notifications</h5>
+            <div class="notification-count" id="notificationCount">0</div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification List Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group notification-list" id="notificationList"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Detail Modal -->
+<div class="modal fade" id="notificationDetailModal" tabindex="-1" aria-labelledby="notificationDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationDetailModalLabel">Notification Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notificationDetailContent">
+                <!-- Details will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Array to hold all notifications
+    const notifications = [];
+
+    // Function to update notification count
+    function updateNotificationCount() {
+        const notificationCount = document.getElementById('notificationCount');
+        notificationCount.textContent = notifications.length;
+    }
+
+    // Function to handle notification click and show details in modal
+    function handleNotificationClick(notificationId) {
+        const clickedNotification = notifications.find(n => n.id === notificationId);
+        const detailContent = document.getElementById('notificationDetailContent');
+        
+        detailContent.innerHTML = `
+            <p><strong>Type:</strong> ${clickedNotification.type.toUpperCase()}</p>
+            <p><strong>Message:</strong> ${clickedNotification.message}</p>
+            <p><strong>Urgency:</strong> ${clickedNotification.urgency}</p>
+        `;
+
+        $('#notificationDetailModal').modal('show'); // Show the detail modal
+    }
+
+    // Function to show all notifications in the main modal
+    function showNotifications() {
+        const notificationList = document.getElementById('notificationList');
+        notificationList.innerHTML = ''; // Clear existing notifications
+
+        notifications.forEach((notification) => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.innerHTML = `<strong>${notification.type.toUpperCase()}</strong>: ${notification.message}`;
+            listItem.onclick = () => handleNotificationClick(notification.id); // Add click event
+
+            notificationList.appendChild(listItem);
+        });
+    }
+
+    // Function to add a new notification from user input
+    document.getElementById('reportForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting normally
+
+        const message = document.getElementById('reportMessage').value;
+        const type = document.getElementById('reportType').value;
+        const urgency = document.getElementById('reportUrgency').value;
+
+        const newNotification = {
+            id: Date.now(),  // Unique ID for each notification
+            message: message,
+            type: type,
+            urgency: urgency
+        };
+
+        notifications.push(newNotification); // Add to notifications array
+        updateNotificationCount(); // Update the count
+
+        // Clear form fields after submission
+        document.getElementById('reportForm').reset();
+    });
+
+    // Initialize notification count on page load
+    document.addEventListener('DOMContentLoaded', updateNotificationCount);
+</script>
+</body>
+</html>

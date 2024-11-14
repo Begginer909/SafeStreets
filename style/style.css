@@ -1,7 +1,8 @@
 li:hover{
     background-color: lightgrey;
 }
-.active{
+
+nav-item.active .nav-link{
     background-color: darkgrey;
     font-weight: bold;
 }
@@ -27,13 +28,13 @@ li:hover{
     border: 1px solid black;
 }
 .sizeCanvas{
-    height: 500px;
+    border: 1px solid black;
+    height: 100%;
     width: 100%;
     max-width: 100%;
 }
 #myChart{
     height: 100%;
-    width: 100%;
     max-width: 100%;
 }
 .map, .sizeCanvas{
@@ -44,8 +45,9 @@ li:hover{
 
 @media (min-width: 800px) {
     .sizeCanvas{
-        border: 1px solid black;
         max-width: 1000px;
+        max-height: 400px;
+        min-height: 400px;
     }
     .map{
         max-width: 1000px;
