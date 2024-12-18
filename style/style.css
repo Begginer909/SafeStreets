@@ -1,0 +1,46 @@
+@media (min-width: 965px) {
+    .border-responsive {
+        border-right: 1px solid white; /* Example border */
+    }
+}
+
+#map{
+    height: 500px;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid black;
+}
+.sizeCanvas{
+    border: 1px solid black;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+}
+#myChart{
+    height: 100%;
+    max-width: 100%;
+}
+.map, .sizeCanvas{
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 800px) {
+    .sizeCanvas{
+        max-width: 1000px;
+        max-height: 400px;
+        min-height: 400px;
+    }
+    .map{
+        max-width: 1000px;
+    }
+}   
+
+#content {
+    transition: width 0.5s ease; /* Smooth transition for the width adjustment */
+}
+
+#navbarCol {
+    transition: width 0.5s ease; /* Smooth transition for navbar as well */
+}

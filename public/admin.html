@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    
+        <link rel="stylesheet" href="../style/style.css">
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+        </script>
+    </head>
+<body >
+
+    <div class="container-fluid">  
+    
+        <div class="row mx-2 mt-3 border border-dark">
+
+            <div class="col-12 col-lg-1" id="navbarCol">
+                <nav class="navbar" id="navbar" >
+                        <button class="navbar-toggler bg-light border-dark position-absolute top-0 start-25 mt-3" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseWidthExample" aria-controls="collapseWidthExample" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>   
+                        <div class="collapse collapse-horizontal bg-primary mt-5 " id="collapseWidthExample">
+                                <ul class="navbar-nav fs-4 mx-3">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="Accounts" aria-current="true" href="adminAccount.html">Accounts</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="crimeReport" href="">Crime Reports</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="Notification" href="">Notification</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="Statistics" href="">Statistics</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="crimeDensityMap" href="">Crime Density Map</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="barangayEvent" href="">Barangay Event</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-light" name="signOut" href="">Sign Out</a>
+                                    </li>
+                                </ul>
+                        </div>
+                </nav>
+            </div>
+
+            <div class="col-11" id="content">
+                <div class="container mt-5">
+                    <div class="row">
+                        <!-- Card 1 -->
+                        <div class="col-md-4">
+                            <a href="adminAccount.html" class="text-decoration-none">
+                                <div class="card text-center shadow-sm" style="height: 200px;">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <h5 class="card-title">Account</h5>
+                                        <p class="card-text">View user and staff accounts.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div class="col-md-4">
+                            <a href="#" class="text-decoration-none">
+                                <div class="card text-center shadow-sm" style="height: 200px;">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <h5 class="card-title">Notifications</h5>
+                                        <p id="notif" class="card-text"></p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Card 1 -->
+                        <div class="col-md-4">
+                            <a href="#" class="text-decoration-none">
+                                <div class="card text-center shadow-sm" style="height: 200px;">
+                                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                        <h5 class="card-title">Crime Reports</h5>
+                                        <p class="card-text">View latest crime reports in the dashboard.</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">
+
+                    <div class="col-12 mt-3">
+                        <div class="sizeCanvas">
+                            <canvas class="ms-lg-5" id="myChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="map col-12 mt-3">
+                        <div id="map"></div>
+                        <input type="text" id="inputColor" placeholder="Please input the street and color" style="width: 300px">
+                        <button onclick="updateColors()">Confirm</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+
+    </script>
+
+    <script>
+        // Function to update the time every second
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString(); // Get the current time in HH:MM:SS format
+            document.getElementById('notif').textContent = timeString;
+        }
+
+        // Update the time immediately when the page loads
+        updateTime();
+
+        // Continue updating the time every 1000ms (1 second)
+        setInterval(updateTime, 1000);
+    </script>
+
+    <script src="../script/scriptMap.js"></script>
+    <script src="../bootstrap/js/bootstrap.js"></script>
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+    <script src="../script/script.js"></script>
+</body>
+</html>
