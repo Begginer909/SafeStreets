@@ -21,21 +21,22 @@
                         <p class="fs-2 text-center text-light mt-3">Create an Account</p>
                         <div class="row mx-auto">
                             <div class="scol-12 col-lg-6 col-xl-6 mb-3 mt-2">
-                                <input type="text" class="form-control" placeholder="First Name:" aria-label="firstName"
+                                <input type="text" id="firstName" class="form-control" placeholder="First Name:" aria-label="firstName"
                                     aria-describedby="firstName">
                             </div>
                             <div class="col-12 col-lg-6 col-xl-6 mb-3 mt-2">
-                                <input type="text" class="form-control" placeholder="Last Name:" aria-label="lastName"
+                                <input type="text" id="lastName" class="form-control" placeholder="Last Name:" aria-label="lastName"
                                     aria-describedby="lastName">
                             </div>
                         </div>
                         <div class="row mx-auto">
                             <div class="col-12 mb-3 mt-2">
-                                <input type="text" class="form-control" placeholder="Contact:" aria-label="Contact"
+                                <input type="text" id="contact" class="form-control" placeholder="Contact:" aria-label="Contact"
                                     aria-describedby="Contact">
+                                <div id="contactFeedback" class="invalid-feedback"></div>
                             </div>
                             <div class="col-12 mb-2 mt-2">
-                                <input type="password" class="form-control" placeholder="Password:"
+                                <input type="password" id="password" class="form-control" placeholder="Password:"
                                     aria-label="Password" aria-describedby="Password">
                             </div>
                         </div>
@@ -72,25 +73,18 @@
                                 <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio"
                                     name="flexRadioDefault" id="Female">
                             </div>
-                            <div class="border border-white rounded-2 p-sm-1 p-md-2 p-lg-2 p-xl-2">
-                                <label class="form-check-label text-light me-xl-2 me-lg-2 me-md-2" for="Others">
-                                    Others
-                                </label>
-                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio"
-                                    name="flexRadioDefault" id="Others">
-                            </div>
                         </div>
                         <div class="row mx-auto">
                             <div class="col-12 mt-3 mb-2" id="additional-textboxes"></div>
                             <div class="col-xl-12 mb-2 mt-2">
-                                <input type="text" class="form-control" placeholder="Username:" aria-label="Username"
+                                <input type="text" id="username" class="form-control" placeholder="Username:" aria-label="Username"
                                     aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
                     <div class="col-12 mt-3 text-center">
-                        <a href="index.html" type="submit"
-                            class="btn btn-dark btn-md border border-white px-5">Signup</a>
+                        <button href="index.html" type="submit"
+                            class="btn btn-dark btn-md border border-white px-5">Signup</button>
                     </div>
             </div>
             </form>
@@ -100,37 +94,7 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const othersRadioButton = document.getElementById('Others');
-            const additionalTextboxesContainer = document.getElementById('additional-textboxes');
-            const radioButtons = document.querySelectorAll('input[name="flexRadioDefault"]');
-
-            function handleRadioChange() {
-                if (othersRadioButton.checked) {
-                    // Create the new textbox
-                    const newTextbox = document.createElement('input');
-                    newTextbox.type = 'text';
-                    newTextbox.className = 'form-control';
-                    newTextbox.placeholder = 'Please specify';
-
-                    // Clear any existing textboxes before adding a new one
-                    additionalTextboxesContainer.innerHTML = '';
-
-                    // Append the new textbox
-                    additionalTextboxesContainer.appendChild(newTextbox);
-                } else {
-                    // If "Others" is not selected, clear the textboxes
-                    additionalTextboxesContainer.innerHTML = '';
-                }
-            }
-
-            // Attach the change event listener to all radio buttons
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', handleRadioChange);
-            });
-        });
-
-
+        
         document.addEventListener('DOMContentLoaded', function () {
             const yearSelect = document.getElementById('year');
             const monthSelect = document.getElementById('month');
@@ -193,10 +157,82 @@
                 populateDays(yearSelect.value, monthSelect.value);
             });
         });
+
+        document.querySelector('form').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent form from reloading the page
+
+        // Collect form data
+        const formData = {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            contact: document.getElementById('contact').value.trim(),
+            password: document.getElementById('password').value.trim(),
+            birthdate: `${document.getElementById('year').value}-${document.getElementById('month').value}-${document.getElementById('day').value}`,
+            gender: document.querySelector('input[name="flexRadioDefault"]:checked')?.id || '',
+            username: document.getElementById('username').value.trim(),
+        };
+
+        // Validate contact number
+        if (!/^\d{11}$/.test(formData.contact)) {
+            alert('Contact number must be 11 digits and contain only numbers.');
+            return;
+        }
+
+        // Validate username
+        try {
+            const usernameCheckResponse = await fetch(`http://localhost:3000/check-username?username=${formData.username}`);
+            const usernameCheckResult = await usernameCheckResponse.json();
+
+            if (usernameCheckResult.exists) {
+                alert('The username is already taken. Please choose another one.');
+                return;
+            }
+        } catch (error) {
+            console.error('Error checking username:', error);
+            alert('An error occurred while checking the username. Please try again.');
+            return;
+        }
+        
+        try {
+            // Send data to the backend
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message);
+                window.location.href = 'index.html'; // Redirect after success
+            } else {
+                alert('Error: ' + result.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while registering.');
+        }
+    });
+
+
+        document.getElementById('contact').addEventListener('input', function () {
+            const contact = this.value.trim();
+            const contactFeedback = document.getElementById('contactFeedback');
+
+            if (!/^\d*$/.test(contact)) {
+                this.classList.add('is-invalid');
+                contactFeedback.textContent = 'Contact number must contain only digits.';
+            } else if (contact.length > 11) {
+                this.classList.add('is-invalid');
+                contactFeedback.textContent = 'Contact number must be exactly 11 digits.';
+            } else {
+                this.classList.remove('is-invalid');
+                contactFeedback.textContent = '';
+            }
+        });
     </script>
 
     <script src="../bootstrap/js/bootstrap.js"></script>
-    <script src="../scriptscript.js"></script>
 </body>
 
 </html>
