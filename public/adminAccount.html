@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../style/styleAdmin.css">
+        <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+        </script>
+
+        <style>
+            .navButton button{
+                height: 90px;
+            }
+        </style>
+
+    </head>
+<body>
+
+    <div class="container-fluid">  
+    
+        <div class="row mx-2 mt-3 border border-dark">
+            <div class="col-2 border border-black" style="width: 25%;">
+                <div>
+                    <h1 class="mt-5 text-center">Dashboard</h1>
+                    <hr>
+                    <div class="navButton"">
+                        <button class="mt-4 w-100">User Account</button>
+                        <button class= "my-3 w-100">Staff Account</button>
+                        <button class ="mb-3 w-100">Create Staff Account</button>
+                        <button class="mb-4 w-100">Back</button>
+                    </div>
+                </div>  
+            </div>
+            <div class="col-8 ms-5">
+                <h1 class="text-center pt-3">USER ACCOUNTS</h1>
+                <table id="taskTable">
+                    <thead>
+                    <tr>
+                        <th class = "text-center">USER ID</th>
+                        <th class = "text-center">USERNAME</th>
+                        <th class = "text-center">PASSWORD</th>
+                        <th class="text-center">ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Data will be inserted here dynamically -->   
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+                <script>
+                    // Fetch data from the backend API
+                    fetch('http://localhost:3000/account')
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = document.getElementById('taskTable').querySelector('tbody');
+                        data.forEach(acc => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${acc.accountID}</td>
+                            <td>${acc.username}</td>
+                            <td>${acc.password}</td>
+                            <td class="text-center">
+                                <button class="btn btn-warning btn-sm" onclick="editTask(${acc.accountID})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteTask(${acc.accountID})">Delete</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching tasks:', error));
+
+                    function editTask(id) {
+                        alert(`Edit Task with ID: ${id}`);
+                        // Additional logic to open a modal or form for editing can go here
+                    }
+
+                    // Delete Task Function
+                    function deleteTask(id) {
+                        if (confirm(`Are you sure you want to delete Task ID ${id}?`)) {
+                            // Send DELETE request to server
+                            fetch(`/tasks/${id}`, { method: 'DELETE' })
+                                .then(response => response.json())
+                                .then(result => {
+                                    alert('Task deleted successfully!');
+                                    // Reload or update the table after deletion
+                                    location.reload();
+                                })
+                                .catch(error => console.error('Error deleting task:', error));
+                    }
+                }
+
+                </script>
+
+</body>

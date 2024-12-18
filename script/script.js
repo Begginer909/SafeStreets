@@ -58,3 +58,4 @@ navbar.addEventListener('hide.bs.collapse', function () {
     contentColumn.style.width = '92%';
     navbarCol.style.width = '8%';  // Hide the navbar when collapsed
 });
+
