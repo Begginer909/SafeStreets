@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home</title>
     
-        <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="../style/styleAdmin.css">
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../style/styleAdmin.css">
         <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
         </script>
 
@@ -63,9 +63,9 @@
                         data.forEach(acc => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${acc.accountID}</td>
-                            <td>${acc.username}</td>
-                            <td>${acc.password}</td>
+                            <td class="text-center">${acc.accountID}</td>
+                            <td class="text-center">${acc.username}</td>
+                            <td class="text-center">${acc.password}</td>
                             <td class="text-center">
                                 <button class="btn btn-warning btn-sm" onclick="editTask(${acc.accountID})">Edit</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteTask(${acc.accountID})">Delete</button>
