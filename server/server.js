@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const http = require('http');
+const bcrypt = require('bcrypt');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
@@ -33,57 +34,52 @@ app.get('/account', (req, res) => {
   });
 });
 
-
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
-const app = express();
-
-app.use(cors());
-app.use(express.json()); // Middleware to parse JSON request bodies
-
-// Database connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'dbsafestreets'
-});
-
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to database!');
-});
-
-// POST route for user registration
 app.post('/register', (req, res) => {
-    const { firstName, middleName,  lastName, contact, password, birthdate, gender, username } = req.body;
+  const { firstName, lastName, contact, password, birthdate, gender, username } = req.body;
 
-    // Insert into 'users' table
-    const userSql = 'INSERT INTO tblaccount (username, password) VALUES (?, ?)';
-    db.query(userSql, [username, password], (err, userResult) => {
-        if (err) {
-            console.error('Error inserting into users:', err);
-            return res.status(500).json({ error: 'Failed to register user.' });
-        }
+  // Insert into 'tbl_information' table
+  const profileSql = `
+      INSERT INTO tbl_information (firstName, lastName, contact, birthday, gender)
+      VALUES (?, ?, ?, ?, ?)
+  `;
 
-        const userId = userResult.insertId; // Get generated user_id
+  db.query(profileSql, [firstName, lastName, contact, birthdate, gender], (err, profileResult) => {
+      if (err) {
+          console.error('Error inserting into tbl_information:', err);
+          return res.status(500).json({ error: 'Failed to save user profile.' });
+      }
 
-        // Insert into 'user_profiles' table
-        const profileSql = `
-            INSERT INTO tbl_information (user_id, first_name, middle_name, last_name, birthday, contact)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        db.query(profileSql, [userId, firstName, lastName, contact, birthdate, gender], (err) => {
-            if (err) {
-                console.error('Error inserting into user_profiles:', err);
-                return res.status(500).json({ error: 'Failed to save user profile.' });
-            }
+      const userId = profileResult.insertId; // Get generated user_id from tbl_information
 
-            res.status(201).json({ message: 'User registered successfully!' });
-        });
-    });
+      // Insert into 'tblaccount' table
+      const accountSql = 'INSERT INTO tblaccount (userID, username, password) VALUES (?, ?, ?)';
+
+      db.query(accountSql, [userId, username, password], (err) => {
+          if (err) {
+              console.error('Error inserting into tblaccount:', err);
+              return res.status(500).json({ error: 'Failed to register user.' });
+          }
+
+          res.status(201).json({ message: 'User registered successfully!' });
+      });
+  });
 });
+
+
+app.get('/check-username', (req, res) => {
+  const { username } = req.query;
+
+  const sql = 'SELECT COUNT(*) AS count FROM tblaccount WHERE username = ?';
+  db.query(sql, [username], (err, results) => {
+      if (err) {
+          console.error('Error checking username:', err);
+          return res.status(500).json({ error: 'Failed to check username.' });
+      }
+      const exists = results[0].count > 0;
+      res.json({ exists }); // Return whether the username exists
+  });
+});
+
 
 
 /*
