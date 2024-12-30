@@ -1,7 +1,11 @@
+require('dotenv').config(); // Load .env variables
+
 const express = require('express');
 const mysql = require('mysql2');
 const http = require('http');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+//const bodyParser = require('body-parse');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
@@ -15,15 +19,47 @@ app.use(express.json());
 
 // Database connection
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'dbsafestreets',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 db.connect((err) => {
   if (err) throw err;
   console.log('Connected to MySQL database!');
+});
+
+// Login endpoint (with JWT)
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  // Find user by username
+  const sql = 'SELECT * FROM tblaccount WHERE username = ?';
+  db.query(sql, [username], async (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Failed to login.' });
+    }
+
+    if (!results.length) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const user = results[0];
+
+    // Compare hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Create JWT token
+    const payload = { userId: user.id }; // Use user ID for payload
+    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+
+    res.json({ message: 'Login successful', token });
+  });
 });
 
 // CRUD Endpoints
