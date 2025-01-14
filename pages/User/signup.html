@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-3 text-center">
-                        <button href="index.html" type="submit"
+                        <button type="submit"
                             class="btn btn-dark btn-md border border-white px-5">Signup</button>
                     </div>
             </div>
@@ -204,7 +204,7 @@
             const result = await response.json();
             if (response.ok) {
                 alert(result.message);
-                window.location.href = 'index.html'; // Redirect after success
+                window.location.href = '../../pages/public/index.html'; // Redirect after success
             } else {
                 alert('Error: ' + result.error);
             }

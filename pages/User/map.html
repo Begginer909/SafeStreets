@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
     </script>
+    <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
 
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
 
@@ -62,9 +63,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
@@ -166,6 +164,43 @@
             mouseover: eventHandlers.handleMouseOver,
             onclick: eventHandlers.handleOnMouseOver,
         }, contextObject);
+
+        // Connect to the Socket.IO server
+        const socket = io('http://localhost:3000');
+
+        // Listen for new crime reports
+        socket.on('new_report', (report) => {
+            console.log('New report received:', report);
+
+            // Display a real-time notification (e.g., an alert or a custom notification UI)
+            alert(`New report: ${report.crimeType} reported at ${report.street}`);
+
+            // Add a new marker to the map for the reported crime
+            const marker = L.marker([report.latitude, report.longitude]).addTo(map);
+            marker.bindPopup(`
+                <b>Crime Type:</b> ${report.crimeType}<br>
+                <b>Description:</b> ${report.description}<br>
+                <b>Reported at:</b> ${report.street}
+            `).openPopup();
+        });
+
+        // Fetch existing reports to display on the map
+        fetch('http://localhost:3000/reports')
+            .then((res) => res.json())
+            .then((reports) => {
+                reports.forEach((report) => {
+                    const marker = L.marker([report.latitude, report.longitude]).addTo(map);
+                    marker.bindPopup(`
+                        <b>Crime type: ${report.crimeType}</b><br>
+                        <p>Description: ${report.description}</p>
+                        <p>Reported by: ${report.firstName} ${report.lastName}</p>
+                        <p>Contact: ${report.contact}</p>
+                    `);
+                });
+            })
+            .catch((err) => console.error('Error fetching reports:', err));
+
+        
     </script>
 
     <script src="../../bootstrap/js/bootstrap.js"></script>
