@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="../../style/style.css">
+    <link rel="stylesheet" href="../../style/styleHome.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+    </script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md" style="background-color: #1f497d; height: 100%">
+        <div class="container-fluid">
+            <li class="navbar-toggler bg-light border-light" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </li>
+            <div class="row mx-auto">
+                <a class="image" href="index.html">
+                    <img src="../../Logo.png" class="img-fluid" width="150px" height="60">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="items" class="navbar-nav fs-3">
+                    <li type="button" class="selectedItem border-responsive active">
+                        <a class="nav-link text-light" name="Home" aria-current="true" href="home.html">Home</a>
+                    </li>
+                    <li type="button" class="selectedItem border-responsive">
+                        <a class="nav-link text-light" name="mapView" href="map.html">Map View</a>
+                    </li>
+                    <li type="button" class="selectedItem border-responsive">
+                        <a class="nav-link text-light" name="createReport" href="createReport.html">Create Report</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+        <h2 class="my-3">Home Page</h2>
+
+        <div class="row border border-dark border-2 py-3" style="background-color: #1f497d;">
+            <div class="home col-12 ms-lg-5 col-lg-3 py-4">
+                <h3 class="fs-lg-2 fs-3 text-center">Barangay Nueva <br>HOTLINES</h3>
+                <div class="mt-4" style="background-color: #4a6c96;">
+                    <div class="icon row py-3 ms-2">
+                        <h3 class="fs-lg-2 fs-3">Telephone Number: </h2>
+                            <div class="col-lg-12 d-flex align-items-center pb-2">
+                                <i class="fs-lg-3 fs-4 fa-solid fa-phone"></i>
+                                <p class="fs-lg-3 fs-4 ms-2 mb-0">09189071233</p>
+                            </div>
+                            <hr class="divider">
+                            <h3 class="fs-lg-2 fs-3">Cellphone Number: </h2>
+                                <div class="col-lg-12 d-flex align-items-center">
+                                    <i class="fs-lg-3 fs-4 fa-solid fa-mobile"></i>
+                                    <p class="fs-lg-3 fs-4 ms-2 mb-0">09189071233</p>
+                                </div>
+                    </div>
+                </div>
+            </div>
+            <div class="home col-12 col-lg-8 position-lg-absolute end-0 me-3 py-3">
+                <h3 class="fs-2 text-center">Barangay Nueva's Upcoming Events</h3>
+                <div class="mt-4 mx-lg-3 py-5 px-4" style="background-color: #4a6c96;">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="image-container" style="background-color: #fff;">
+                                <img class="imageEvents" src="Logo.png" alt="Event 1">
+                                <p><a href="../../Una.jpg" target="_blank">Breastfeeding and HIV Awareness</a></p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="image-container" style="background-color: #fff;">
+                                <img class="imageEvents" src="Logo.png" alt="Event 1">
+                                <p><a href="../../Una.jpg" target="_blank">Breastfeeding and HIV Awareness</a></p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="image-container" style="background-color: #fff;">
+                                <img class="imageEvents" src="Logo.png" alt="Event 1">
+                                <p><a href="../../Una.jpg" target="_blank">Breastfeeding and HIV Awareness</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+    <script src="../../script/script.js"></script>
+    <script src="../../script/scriptHome.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../style/style.css">
+    <link rel="stylesheet" href="../../style/styleReport.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+    </script>
+
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md" style="background-color: #1f497d; height: 100%">
+        <div class="container-fluid">
+            <button class="navbar-toggler bg-light border-light" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="row mx-auto">
+                <a class="image" href="#">
+                    <img src="../../Logo.png" class="img-fluid" width="150px" height="60">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="items" class="navbar-nav fs-3">
+                    <li type="button" class="selectedItem border-responsive">
+                        <a class="nav-link text-light" name="Home" aria-current="true" href="home.html">Home</a>
+                    </li>
+                    <li type="button" class="selectedItem border-responsive">
+                        <a class="nav-link text-light" name="mapView" href="map.html">Map View</a>
+                    </li>
+                    <li type="button" class="selectedItem border-responsive active">
+                        <a class="nav-link text-light" name="createReport" href="createReport.html">Create Report</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid px-4">
+        <h2 class="my-3">Create a Report</h2>
+        <div class="row mb-5 py-5 border border-2 border-dark position-relative d-flex justify-content-center" style="background-color: #1f497d;">
+            <div class="col-11 col-lg-5 px-5 py-5 report-container">
+                <h1>CRIME DETAILS</h1>
+                <form id="crime-report-form">
+                    <label for="name">Witness Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="contact">Contact Number:</label>
+                    <input type="tel" id="contact" name="contact" required>
+
+                    <div class="mb-2">
+                        <label for="crime-type">Type of Crime:</label>
+                        <select id="crime-type" name="crime-type" required>
+                            <option value="">Select a crime type</option>
+                            <option value="burglary">Burglary</option>
+                            <option value="assault">Assault</option>
+                            <option value="theft">Theft</option>
+                            <option value="vandalism">Vandalism</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <label for="description">Description: </label>
+                    <input type="text" id="describeID" name="description">
+
+                    <label for="latitude">Latitude:</label>
+                    <input type="text" id="latitude" name="latitude" required>
+
+                    <label for="longitude">Longitude:</label>
+                    <input type="text" id="longitude" name="longitude" required>
+
+                    <label for="street">Street:</label>
+                    <input type="text" id="street" name="street" >
+
+                    <input type="hidden" id="accID" name="accID">
+
+                    <div class="btn-container">
+                        <button type="button" id="submitButton" class="btn-submit btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Submit Report</button>
+                        <button type="reset" class="btn-cancel">Cancel Report</button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmation</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to submit this report?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/protected', {
+                method: 'GET',
+                credentials: 'include', // Include cookies in the request
+                });
+
+                if (!response.ok) {
+                throw new Error('Failed to fetch user information.');
+                }
+
+                const data = await response.json();
+                populateFields(data.user); // Populate the fields with user data
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            });
+
+            function populateFields(user) {
+                // Example: Fill fields with the user's information
+                document.getElementById('name').value = (user.Fname || '') + ' ' + (user.Lname || '');
+                document.getElementById('contact').value = user.contact || '';
+
+                // Store accID for later use
+                 document.getElementById('accID').value = user.accID; // Make sure the hidden input exists
+            }
+
+    </script>
+
+    <script>
+        async function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    // Set latitude and longitude values
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+
+                    // Get the street address
+                    const street = await getStreetAddress(position.coords.latitude, position.coords.longitude);
+                    console.log('Street:', street);
+
+                    // Set the street address in a global variable or DOM if needed
+                    document.getElementById('street').value = street; // Set it to an input field (optional)
+                }, (error) => {
+                    alert("Unable to fetch location: " + error.message);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Define getStreetAddress function
+        function getStreetAddress(lat, lon) {
+            const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+            return fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data && data.address) {
+                         // Combine road, street, and city into one string
+                        const road = data.address.road || '';
+                        const street = data.address.suburb || ''; // Sometimes the street name is in 'suburb'
+                        const city = data.address.city || data.address.town || data.address.village || ''; // Handle different city variations
+
+                        // Concatenate the address components into one string
+                        return `${road}, ${street}, ${city}`.trim();
+                    } else {
+                        console.error('No address found for these coordinates.');
+                        return 'Street not found';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching street address:', error);
+                    return 'Street not found';
+                });
+        }
+
+        // Call getLocation when the page loads to fetch the user's location
+        document.addEventListener('DOMContentLoaded', getLocation);
+
+        // Handle form submission
+        document.getElementById('crime-report-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const lat = document.getElementById('latitude').value;
+            const long = document.getElementById('longitude').value;
+            const street = document.getElementById('street').value; // Retrieve street from the DOM (or from a global variable)
+
+            const data = {
+                accID: document.getElementById('accID').value,
+                name: document.getElementById('name').value,
+                contact: document.getElementById('contact').value,
+                crimeType: document.getElementById('crime-type').value,
+                description: document.getElementById('describeID').value,
+                latitude: lat,
+                longitude: long,
+                street: street,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    alert('Crime report submitted successfully!');
+                    // Optional: Notify staff via WebSocket or other real-time mechanism
+                } else {
+                    alert('Failed to submit report.');
+                }
+            } catch (error) {
+                console.error('Error submitting report:', error);
+            }
+        });
+    </script>
+
+
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+    <script src="../../script/script.js"></script>
+</body>
+
+</html>

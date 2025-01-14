@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../style/styleAdmin.css">
+        <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+        </script>
+
+        <style>
+            .navBar a{
+                height: 90px;
+                background-color: lightgrey;
+                border: 1px solid black;
+                text-align: center;
+                padding-top: 30px;
+                color: black;
+                text-decoration: none;
+                font-size: large;
+            }
+        </style>
+
+    </head>
+<body>
+
+    <div class="container-fluid">  
+    
+        <div class="row mx-2 mt-3 border border-dark">
+            <div class="col-2 border border-black" style="width: 25%;">
+                <div>
+                    <h1 class="mt-5 text-center">Dashboard</h1>
+                    <hr>
+                    <div class="navBar"">
+                        <a type="button" href ="adminAccount.html" class="text-center mt-4 w-100">User Account</button>
+                        <a type="button" href="#" class= "my-3 w-100">Staff Account</a>
+                        <a type="button" class ="mb-3 w-100">Create Staff Account</a>
+                        <a type="button" href ="admin.html" class="mb-4 w-100">Back</a>
+                    </div>
+                </div>  
+            </div>
+            <div class="col-8 ms-5">
+                <h1 class="text-center pt-3">STAFF ACCOUNT</h1>
+                <table id="taskTable">
+                    <thead>
+                    <tr>
+                        <th class = "text-center">USER ID</th>
+                        <th class = "text-center">USERNAME</th>
+                        <th class = "text-center">FULL NAME</th>
+                        <th class="text-center">CONTACT</th>
+                        <th class="text-center">ROLE</th>
+                        <th class="text-center">ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Data will be inserted here dynamically -->   
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="editTaskModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; border:1px solid #ccc; background:#fff; z-index:1000;">
+                <h3>Edit Account</h3>
+                    <form id="editTaskForm">
+                    <input type="hidden" id="editAccountId" />
+                    <input type="hidden" id="editUserId">
+                    <div>
+                        <label for="editUsername">Username:</label>
+                        <input type="text" id="editUsername" required />
+                    </div>
+                    <div>
+                        <label for="editFirstName">First Name:</label>
+                        <input type="text" id="editFirstName" required />
+                    </div>
+                    <div>
+                        <label for="editLastName">Last Name:</label>
+                        <input type="text" id="editLastName" required />
+                    </div>
+                    <div>
+                        <label for="editContact">Contact:</label>
+                        <input type="text" id="editContact" required />
+                    </div>
+                    <div>
+                        <label for="editRole">Role:</label>
+                        <select id="editRole" required>
+                        <option value="User">User</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editPassword">Password:</label>
+                        <input type="password" id="editPassword" placeholder="Leave empty to keep current password" />
+                    </div>
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="closeEditModal()">Cancel</button>
+                    </form>
+            </div>
+
+        </div>
+    </div>
+
+                <script>
+                    // Fetch data from the backend API
+                    fetch('http://localhost:3000/userAccount/Staff')
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = document.getElementById('taskTable').querySelector('tbody');
+                        data.forEach(acc => {
+                        const row = document.createElement('tr');
+                        row.dataset.account = JSON.stringify(acc); // Add account data as a data attribute
+                        row.innerHTML = `
+                           <td class="text-center">${acc.userID}</td>
+                            <td class="text-center">${acc.username}</td>
+                            <td class="text-center">${acc.firstName} ${acc.lastName}</td>
+                            <td class="text-center">${acc.contact}</td>
+                            <td class="text-center">${acc.role}</td>
+
+                            <td class="text-center">
+                                <button class="btn btn-warning btn-sm" onclick="editTask(this)">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteTask(${acc.accountID})">Delete</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching tasks:', error));
+
+                    function editTask(buttonElement) {
+                    const row = buttonElement.closest('tr');
+                    const account = JSON.parse(row.dataset.account); // Parse the account data
+
+                    // Open the modal
+                    document.getElementById('editTaskModal').style.display = 'block';
+
+                    // Populate the form fields with the account data
+                    document.getElementById('editAccountId').value = account.userID;
+                    document.getElementById('editUsername').value = account.username;
+                    document.getElementById('editFirstName').value = account.firstName;
+                    document.getElementById('editLastName').value = account.lastName;
+                    document.getElementById('editContact').value = account.contact;
+                    document.getElementById('editRole').value = account.role;
+                }
+
+                function closeEditModal() {
+                    document.getElementById('editTaskModal').style.display = 'none';
+                }
+
+                document.getElementById('editTaskForm').addEventListener('submit', async function (e) {
+                    e.preventDefault();
+
+                    const id = document.getElementById('editAccountId').value;
+                    const updatedData = {
+                        username: document.getElementById('editUsername').value,
+                        firstName: document.getElementById('editFirstName').value,
+                        lastName: document.getElementById('editLastName').value,
+                        contact: document.getElementById('editContact').value,
+                        role: document.getElementById('editRole').value,
+                    };
+
+                    // Include the password only if it's provided
+                    const password = document.getElementById('editPassword').value;
+                    if (password) {
+                        updatedData.password = password; // The backend will hash this
+                    }
+
+                    try {
+                        const response = await fetch(`http://localhost:3000/updateAccount/${id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(updatedData),
+                        });
+
+                        if (response.ok) {
+                            alert('Account updated successfully');
+
+                            closeEditModal();
+                            // Reload the data or update the UI
+
+                            // Update the UI
+                            const rows = document.querySelectorAll('#taskTable tbody tr');
+                            rows.forEach((row) => {
+                                const account = JSON.parse(row.dataset.account);
+                                if (account.userID === parseInt(id, 10)) {
+                                    // Update the row data
+                                    account.username = updatedData.username;
+                                    account.firstName = updatedData.firstName;
+                                    account.lastName = updatedData.lastName;
+                                    account.contact = updatedData.contact;
+                                    account.role = updatedData.role;
+
+                                    row.dataset.account = JSON.stringify(account); // Update the row dataset
+                                    row.innerHTML = `
+                                        <td class="text-center">${account.userID}</td>
+                                        <td class="text-center">${account.username}</td>
+                                        <td class="text-center">${account.firstName} ${account.lastName}</td>
+                                        <td class="text-center">${account.contact}</td>
+                                        <td class="text-center">${account.role}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-warning btn-sm" onclick="editTask(this)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${account.userID})">Delete</button>
+                                        </td>
+                                    `;
+                                }
+                            });
+                        } else {
+                            throw new Error('Failed to update account');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('An error occurred while updating the account');
+                    }
+                });
+
+                    // Delete Task Function
+                    function deleteTask(id) {
+                        if (confirm(`Are you sure you want to delete Task ID ${id}?`)) {
+                            // Send DELETE request to server
+                            fetch(`/tasks/${id}`, { method: 'DELETE' })
+                                .then(response => response.json())
+                                .then(result => {
+                                    alert('Task deleted successfully!');
+                                    // Reload or update the table after deletion
+                                    location.reload();
+                                })
+                                .catch(error => console.error('Error deleting task:', error));
+                    }
+                }
+
+                </script>
+
+</body>
