@@ -52,10 +52,10 @@
                 <h1>CRIME DETAILS</h1>
                 <form id="crime-report-form">
                     <label for="name">Witness Name:</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" readonly required>
 
                     <label for="contact">Contact Number:</label>
-                    <input type="tel" id="contact" name="contact" required>
+                    <input type="tel" id="contact" name="contact" readonly required>
 
                     <div class="mb-2">
                         <label for="crime-type">Type of Crime:</label>
@@ -80,16 +80,17 @@
 
                     <label for="street">Street:</label>
                     <input type="text" id="street" name="street" >
+                    
+                    
 
                     <input type="hidden" id="accID" name="accID">
 
-                    <div class="btn-container">
+                    <div class="btn-container mt-4">
                         <button type="button" id="submitButton" class="btn-submit btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Submit Report</button>
-                        <button type="reset" class="btn-cancel">Cancel Report</button>
                     </div>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -111,126 +112,7 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('http://localhost:3000/protected', {
-                method: 'GET',
-                credentials: 'include', // Include cookies in the request
-                });
-
-                if (!response.ok) {
-                throw new Error('Failed to fetch user information.');
-                }
-
-                const data = await response.json();
-                populateFields(data.user); // Populate the fields with user data
-            } catch (error) {
-                console.error('Error:', error);
-            }
-            });
-
-            function populateFields(user) {
-                // Example: Fill fields with the user's information
-                document.getElementById('name').value = (user.Fname || '') + ' ' + (user.Lname || '');
-                document.getElementById('contact').value = user.contact || '';
-
-                // Store accID for later use
-                 document.getElementById('accID').value = user.accID; // Make sure the hidden input exists
-            }
-
-    </script>
-
-    <script>
-        async function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    // Set latitude and longitude values
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
-
-                    // Get the street address
-                    const street = await getStreetAddress(position.coords.latitude, position.coords.longitude);
-                    console.log('Street:', street);
-
-                    // Set the street address in a global variable or DOM if needed
-                    document.getElementById('street').value = street; // Set it to an input field (optional)
-                }, (error) => {
-                    alert("Unable to fetch location: " + error.message);
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        // Define getStreetAddress function
-        function getStreetAddress(lat, lon) {
-            const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-
-            return fetch(url)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data && data.address) {
-                         // Combine road, street, and city into one string
-                        const road = data.address.road || '';
-                        const street = data.address.suburb || ''; // Sometimes the street name is in 'suburb'
-                        const city = data.address.city || data.address.town || data.address.village || ''; // Handle different city variations
-
-                        // Concatenate the address components into one string
-                        return `${road}, ${street}, ${city}`.trim();
-                    } else {
-                        console.error('No address found for these coordinates.');
-                        return 'Street not found';
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching street address:', error);
-                    return 'Street not found';
-                });
-        }
-
-        // Call getLocation when the page loads to fetch the user's location
-        document.addEventListener('DOMContentLoaded', getLocation);
-
-        // Handle form submission
-        document.getElementById('crime-report-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const lat = document.getElementById('latitude').value;
-            const long = document.getElementById('longitude').value;
-            const street = document.getElementById('street').value; // Retrieve street from the DOM (or from a global variable)
-
-            const data = {
-                accID: document.getElementById('accID').value,
-                name: document.getElementById('name').value,
-                contact: document.getElementById('contact').value,
-                crimeType: document.getElementById('crime-type').value,
-                description: document.getElementById('describeID').value,
-                latitude: lat,
-                longitude: long,
-                street: street,
-            };
-
-            try {
-                const response = await fetch('http://localhost:3000/report', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
-                });
-
-                if (response.ok) {
-                    alert('Crime report submitted successfully!');
-                    // Optional: Notify staff via WebSocket or other real-time mechanism
-                } else {
-                    alert('Failed to submit report.');
-                }
-            } catch (error) {
-                console.error('Error submitting report:', error);
-            }
-        });
-    </script>
-
-
+    <script src="../../script/userReport.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
     <script src="../../script/script.js"></script>

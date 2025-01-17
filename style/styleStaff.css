@@ -1,0 +1,24 @@
+.notification-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .notification-card {
+    width: 200px;
+    cursor: pointer;
+    border: 2px solid #ccc;
+  }
+  
+  #report-count {
+    position: relative;
+    top: -10px;
+    right: -10px;
+    font-size: 18px;
+    display: none;
+  }
+  
+  #report-count.visible {
+    display: inline-block;
+  }
+  
