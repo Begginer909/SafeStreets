@@ -699,6 +699,8 @@ function emitCircleData() {
           db.query(updateQuery, [circle.id, ...reportIDs], (err) => {
             if (err) return reject(err);
 
+            console.log(reportIDs);
+
             // Resolve with the count of updated reports
             resolve({ id: circle.id, count: reportIDs.length });
           });
@@ -717,29 +719,43 @@ function emitCircleData() {
     .catch(err => console.error('Error fetching circle data:', err));
 }
 
+app.post('/api/reports', (req, res) => {
+  const { viewMode, startDate, endDate } = req.body;
 
-app.get('/api/circle-data/:circleId', (req, res) => {
-  const circleId = req.params.circleId;
+  const newStartDate = `${startDate} 00:00:00`;
+  const newEndDate = `${endDate} 23:59:59`;
 
-  // Mocked data - Replace this with actual queries based on circle ID
-  const query = `
-      SELECT crimeType, COUNT(*) AS count, 
-             (COUNT(*) * 100 / (SELECT COUNT(*) FROM tblreport)) AS percentage 
-      FROM tblreport
-      WHERE circleId = ?
-      GROUP BY crimeType;
-  `;
+  let query;
+  let params = [newStartDate, newEndDate];
 
-  db.query(query, [circleId], (err, results) => {
-      if (err) {
-          console.error(err);
-          res.status(500).send('Error fetching data for circle');
-      } else {
-          res.json(results);
-      }
+  if (viewMode === 'totalReports') {
+    query = `
+      SELECT 
+        DATE_FORMAT(createdAt, '%Y-%m-%d') as date, 
+        COUNT(*) as count 
+      FROM tblreport 
+      WHERE createdAt BETWEEN ? AND ? 
+      GROUP BY DATE(createdAt)
+    `;
+  } else if (viewMode === 'totalCategory') {
+    query = `
+      SELECT 
+        DATE_FORMAT(createdAt, '%Y-%m-%d') as date, 
+        crimeType, 
+        COUNT(crimeType) as count 
+      FROM tblreport 
+      WHERE createdAt BETWEEN ? AND ? 
+      GROUP BY DATE(createdAt), crimeType
+    `;
+  } else {
+    return res.status(400).json({ error: 'Invalid view mode' });
+  }
+
+  db.query(query, params, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
   });
 });
-
 
 
 // Socket.IO

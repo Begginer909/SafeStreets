@@ -3,15 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="../../style/style.css">
     <link rel="stylesheet" href="../../style/styleHome.css">
     <link rel="stylesheet" href="../../style/styleReport.css">
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
-    </script>
+    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
 
@@ -49,28 +52,48 @@
 
     <div class="container-fluid">
         <h2 class="mt-5 mb-3 d-flex justify-content-center">Crime Statistics</h2>
-        <div class="sizeCanvas col-12 mb-5">
-            <div class="container">
-                <h3>Select an Area</h3>
-                <select id="circleSelect">
-                    <option value="" disabled selected>Select Circle</option>
-                    <option value="1">Area 1</option>
-                    <option value="2">Area 2</option>
-                    <option value="3">Area 3</option>
-                    <option value="4">Area 4</option>
-                    <option value="5">Area 5</option>
-                    <option value="6">Area 6</option>
-                    <option value="7">Area 7</option>
-                    <option value="8">Area 8</option>
-                    <option value="9">Area 9</option>
-                    <option value="10">Area 10</option>
-                    <option value="11">Area 11</option>
-                </select>
-            
-                <canvas id="crimeChart" width="400" height="400"></canvas>
-            </div>            
-        </div>
 
+        <div class="container my-4">
+          <h1 class="text-center mb-4">Crime Reports Chart</h1>
+      
+          <!-- Filter Section -->
+          <div class="card p-3 mb-4">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="viewMode" class="form-label">View Mode:</label>
+                <select id="viewMode" class="form-select">
+                  <option value="totalCategory">Category Reports</option>
+                  <option value="totalReports">Total Reports</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="dateRange" class="form-label">Date Range:</label>
+                <input id="dateRange" type="text" class="form-control" placeholder="Select date range">
+              </div>
+              <div class="col-md-4 d-flex align-items-end">
+                <button id="filterButton" class="btn btn-primary w-100">Filter</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card p-3 mb-4">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <button id="expandButton" class="btn btn-secondary w-100">Expand for Print</button>
+              </div>
+              <div class="col-md-6">
+                <button id="saveButton" class="btn btn-secondary w-100">Save as PDF</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card p-3">
+            <!-- Ensure only this div scrolls horizontally -->
+            <div id="chartContainer" style="overflow-x: auto; white-space: nowrap;">
+              <canvas id="crimeChart" style="min-width: 1100px;"></canvas>
+            </div>
+          </div>
+        
         <h2 class="mt-5 mb-3 d-flex justify-content-center">Crime Density Map</h2>
         <div class="map col-12">
             <div id="map"></div>
@@ -79,13 +102,11 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="../../script/userMap.js"></script>
+    <script src="../../script/chart.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
-    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
-    <script src="../../script/script.js"></script>
 </body>
 
 </html>

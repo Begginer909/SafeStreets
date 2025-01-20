@@ -10,32 +10,28 @@
     max-width: 100%;
     border: 1px solid black;
 }
-.sizeCanvas{
-    border: 1px solid black;
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
+
+/* Dynamic width adjustment for the chart container */
+#chartContainer {
+    overflow-x: auto; /* Enable horizontal scrolling only within this container */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    white-space: nowrap; /* Prevent elements from wrapping */
+    max-width: 100%; /* Ensure container does not exceed its parent width */
+    
 }
-#myChart{
-    height: 100%;
-    max-width: 100%;
+  
+canvas {
+    display: block;
+    max-width: none; /* Allow canvas to exceed the container width */
+    position: relative;
 }
-.map, .sizeCanvas{
+
+
+.map{
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
-
-@media (min-width: 800px) {
-    .sizeCanvas{
-        max-width: 1000px;
-        max-height: 400px;
-        min-height: 400px;
-    }
-    .map{
-        max-width: 1000px;
-    }
-}   
 
 #content {
     transition: width 0.5s ease; /* Smooth transition for the width adjustment */
