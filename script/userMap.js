@@ -45,8 +45,6 @@ map.on('drag', function () {
 map.panInsideBounds(bounds, { animate: false });
 });
 
-
-
 // Connect to the Socket.IO server
 const socket = io('http://localhost:3000');
 
@@ -124,72 +122,22 @@ socket.on('circle-data', (data) => {
       });
 });
 
+//PRINTING AND SAVING AS PDF
 
-/*
-//CHART JS
-const chartContext = document.getElementById('crimeChart').getContext('2d');
-let crimeChart; // For storing the chart instance
-circleId = circles.id;
+const expandButton = document.getElementById('expandButton');
+const saveButton = document.getElementById('saveButton');
 
-// Function to fetch and update the chart
-async function fetchAndUpdateChartData(circleId) {
-    try {
-        const response = await fetch(`http://localhost:3000/api/circle-data/${circleId}`);
-        const data = await response.json();
-
-        // Data for the chart
-        const labels = data.map(item => item.crimeType);
-        const values = data.map(item => item.count);
-        const percentages = data.map(item => parseFloat(item.percentage).toFixed(2));
-
-        // Update or create chart
-        if (crimeChart) {
-            crimeChart.data.labels = labels;
-            crimeChart.data.datasets[0].data = values;
-            crimeChart.update();
-        } else {
-            crimeChart = new Chart(chartContext, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Crime Count',
-                        data: values,
-                        backgroundColor: '#36A2EB',
-                    }]
-                },
-                options: {
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    const percentage = percentages[tooltipItem.dataIndex];
-                                    const value = tooltipItem.raw;
-                                    return `Value: ${value}, Percentage: ${percentage}%`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    } catch (error) {
-        console.error('Error fetching chart data:', error);
-    }
-}
-
-// Add click event listeners to circles
-leafletCircles.forEach(circle => {
-    circle.on('click', () => {
-        const circleId = circles.find(c => c.lat === circle.getLatLng().lat && c.lng === circle.getLatLng().lng).id;
-        fetchAndUpdateChartData(circleId);
-    });
+// Toggle expansion for print/save
+expandButton.addEventListener('click', () => {
+    chartContainer.classList.toggle('expanded');
 });
 
-// Add event listener to dropdown
-document.getElementById('circleSelect').addEventListener('change', (event) => {
-    const selectedCircleId = event.target.value;
-    fetchAndUpdateChartData(selectedCircleId);
-});
+// Save chart as PDF
+saveButton.addEventListener('click', () => {
+    const canvas = document.getElementById('crimeChart');
+    const canvasImage = canvas.toDataURL('image/png', 1.0);
 
-*/
+    const pdf = new jsPDF('landscape');
+    pdf.addImage(canvasImage, 'PNG', 10, 10, 280, 150);
+    pdf.save('crime_chart.pdf');
+});
