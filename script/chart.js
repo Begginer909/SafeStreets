@@ -166,56 +166,39 @@ const updateChart = (data, viewMode, startDate, endDate) => {
                 display: true,
                 labels: {
                   generateLabels: function (chart) {
-                    return chart.data.datasets.map(dataset => {
+                    return chart.data.datasets.map((dataset, i) => {
+                      const meta = chart.getDatasetMeta(i);
                       const totalCount = dataset.counts.reduce((sum, count) => sum + count, 0);
                       const crimeType = dataset.label.includes(': ')
                         ? capitalize(dataset.label.split(': ')[1])
                         : 'Total Reports';
 
-                      if(viewMode == "totalReports"){
-                        return {
-                          text: `Total Count: ${totalCount}`,
-                          fillStyle: dataset.backgroundColor,
-                          strokeStyle: dataset.borderColor,
-                        };
-                      }
-                      else if(viewMode == "totalCategory"){
-                        return {
-                          text: `Crime Type: ${crimeType} | Total Count: ${totalCount}`,
-                          fillStyle: dataset.backgroundColor,
-                          strokeStyle: dataset.borderColor,
-                        };
-                      }
+                        const text = viewMode === "totalReports"
+                        ? `Total Count: ${totalCount}`
+                        : `Crime Type: ${crimeType} | Total Count: ${totalCount}`;
+            
+                      return {
+                        text: text,
+                        fillStyle: dataset.backgroundColor,
+                        strokeStyle: dataset.borderColor,
+                        datasetIndex: i,
+                        hidden: meta.hidden, // Keep track of visibility
+                        fontColor: meta.hidden ? '#999' : '#000', // Change color to indicate visibility
+                        textDecoration: meta.hidden ? 'line-through' : 'none', // Add line-through for hidden datasets
+                      };
                     });
                   },
                 },
-                onClick: function(e, legendItem) {
-                  console.log("Legend Item Clicked:", legendItem);
-                  console.log("Legend Item Dataset Index:", legendItem.datasetIndex);
-              
-                  // If datasetIndex is still undefined, manually find the correct index
-                  if (legendItem.datasetIndex === undefined) {
-                    const label = legendItem.text; // Get the label text for debugging
-                    console.warn("Dataset index not found. Searching for label: " + label);
-              
-                    // Try to find the dataset by matching label or text
-                    chart.data.datasets.forEach((dataset, index) => {
-                      if (dataset.label.includes(label)) {
-                        console.log("Found matching dataset at index:", index);
-                        legendItem.datasetIndex = index;
-                      }
-                    });
-                  }
-              
-                  // Proceed with toggling dataset visibility
-                  const datasetIndex = legendItem.datasetIndex;
-                  const meta = chart.getDatasetMeta(datasetIndex);
-              
-                  if (meta) {
+                onClick: function (e, legendItem) {
+                  const datasetIndex = legendItem.datasetIndex; // Directly use datasetIndex
+                  if (typeof datasetIndex !== 'undefined') {
+                    const meta = chart.getDatasetMeta(datasetIndex);
                     meta.hidden = !meta.hidden; // Toggle visibility
                     chart.update(); // Re-render the chart
+                  } else {
+                    console.error("Dataset index is undefined for legend item:", legendItem);
                   }
-                }
+                },  
               },
             },
           },
