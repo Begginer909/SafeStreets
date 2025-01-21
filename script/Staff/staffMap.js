@@ -41,62 +41,6 @@ L.latLng(north, east)  // Northeast corner (North, East)
 map.setMaxBounds(bounds);
 
 
-// Connect to the Socket.IO server
-const socketUser = io('http://localhost:3000');
-
-// Listen for new crime reports
-socketUser.on('incident_confirmed', (report) => {
-    console.log('New report received:', report);
-
-    // Display a real-time notification (e.g., an alert or a custom notification UI)
-    alert(`New report: ${report.crimeType} reported at ${report.street}`);
-
-    // Format the `createdAt` timestamp
-    const reportDate = new Date(report.createdAt); // Convert to a Date object
-
-    console.log(report.createdAt);
-    
-    const formattedDate = reportDate.toLocaleString('en-US', {
-        timeZone: 'Asia/Manila',
-        year: 'numeric',
-        month: 'short', // e.g., "Jan"
-        day: '2-digit', // e.g., "15"
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true, // AM/PM format
-    });
-    
-    const crimeType = report.crimeType.toLowerCase(); // Normalize for consistent checks
-    let color;
-
-    // Define colors based on crime types
-    if (crimeType === "theft") {
-        color = "orange";
-    } else if (crimeType === "assault") {
-        color = "red";
-    } else if (crimeType === "vandalism") {
-        color = "blue";
-    } else if (crimeType === "fraud") {
-        color = "purple";
-    } else {
-        color = "black"; // Default color for undefined crimes
-    }
-
-    // Add a new marker to the map for the reported crime
-    const marker = L.marker([report.latitude, report.longitude]).addTo(map);
-    marker.bindPopup(`
-        <div style="text-transform: capitalize; font-size: 15px; color: ${color}">
-            <div style="text-align: center; font-size: 20px">
-            <b>AREA:  ${report.circleID} </b> <br><hr>
-            </div>
-            <b>Crime Type:</b> ${report.crimeType}<br>
-            <b>Description:</b> ${report.description}<br>
-            <b>Reported at:</b> ${report.street}<br>
-            <b>Reported on:</b> ${formattedDate}
-        </div>
-    `).openPopup();
-});
-
 //CIRCLE OVERLAY 
 
 // Circle definitions - cicle counting start from the top 
@@ -123,19 +67,42 @@ const leafletCircles = circles.map(circle => {
 });
 
 
+// Connect to the Socket.IO server
+const socketStaff = io('http://localhost:3000');
+
   // Listen for the 'circle-data' event from the server
-socketUser.on('circle-data', (data) => {
+socketStaff.on('circle-data', (data) => {
     console.log('Received circle data:', data); // Add this
       data.forEach((circleData, index) => {
         const count = circleData.count;
         let newColor = 'green';
-        if (count >= 5 && count <= 10) newColor = 'yellow';
+        if (count > 5 && count <= 10) newColor = 'yellow';
         else if (count > 10 && count <= 20) newColor = 'orange';
         else if (count > 20) newColor = 'red';
 
         console.log(`Circle ${index} new color: ${newColor}`);
 
-        // Update circle color based on report count
+        // Update circle color based on report count    
         leafletCircles[index].setStyle({ color: newColor });
       });
+});
+
+//PRINTING AND SAVING AS PDF
+
+const expandButton = document.getElementById('expandButton');
+const saveButton = document.getElementById('saveButton');
+
+// Toggle expansion for print/save
+expandButton.addEventListener('click', () => {
+    chartContainer.classList.toggle('expanded');
+});
+
+// Save chart as PDF
+saveButton.addEventListener('click', () => {
+    const canvas = document.getElementById('crimeChart');
+    const canvasImage = canvas.toDataURL('image/png', 1.0);
+
+    const pdf = new jsPDF('landscape');
+    pdf.addImage(canvasImage, 'PNG', 10, 10, 280, 150);
+    pdf.save('crime_chart.pdf');
 });
