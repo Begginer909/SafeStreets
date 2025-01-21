@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="../../style/styleReport.css">
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous"></script>
+    
     <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
@@ -45,14 +45,15 @@
                     <li type="button" class="selectedItem border-responsive">
                         <a class="nav-link text-light" name="createReport" href="createReport.html">Create Report</a>
                     </li>
+                    <li type="button" class="selectedItem border-responsive">
+                      <a class="nav-link text-light" name="createReport" href="../../pages/public/index.html">Logout</a>
+                  </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid">
-        <h2 class="mt-5 mb-3 d-flex justify-content-center">Crime Statistics</h2>
-
         <div class="container my-4">
           <h1 class="text-center mb-4">Crime Reports Chart</h1>
       
@@ -75,17 +76,6 @@
               </div>
             </div>
           </div>
-
-          <div class="card p-3 mb-4">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <button id="expandButton" class="btn btn-secondary w-100">Expand for Print</button>
-              </div>
-              <div class="col-md-6">
-                <button id="saveButton" class="btn btn-secondary w-100">Save as PDF</button>
-              </div>
-            </div>
-          </div>
           
           <div class="card p-3">
             <!-- Ensure only this div scrolls horizontally -->
@@ -94,10 +84,11 @@
             </div>
           </div>
         
-        <h2 class="mt-5 mb-3 d-flex justify-content-center">Crime Density Map</h2>
-        <div class="map col-12">
-            <div id="map"></div>
-            <br>
+          <h1 class="text-center mb-4 mt-5">Crime Density Map</h1>
+          <div class="map col-12">
+              <div id="map"></div>
+              <br>
+          </div>
         </div>
     </div>
 

@@ -7,41 +7,64 @@
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../../style/style.css">
     <title>Sign up</title>
-
+    <style>
+        body {
+            background-color: #2C3E50; /* Dark Blue */
+        }
+        .container-form {
+            background-color: #ECF0F1; /* Light Gray for the form */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+        .form-control {
+            background-color: #FFFFFF; /* White for input fields */
+            color: #34495E; /* Dark Gray text */
+        }
+        .form-label {
+            color: #7F8C8D; /* Medium Gray for labels */
+        }
+        .btn-custom {
+            background-color: #E74C3C; /* Red for the button */
+            color: #FFFFFF; /* White text */
+        }
+        .btn-custom:hover{
+            background-color: #4962f2; /*  Blue for the button */
+            color: #FFFFFF; /* White text */
+        }
+        .text-dark {
+            color: #34495E !important; /* Ensure dark text for headings */
+        }
+    </style>
 </head>
 
-<body style="background-color: #616eff">
+<body>
 
     <div class="container-fluid">
         <div class="row mx-auto">
-            <div
-                class="container-form col-xl-5 col-lg-6 col-md-8 col-9 position-absolute top-50 start-50 translate-middle">
-                <form class="border border-white border-2 px-4 pb-4 bg-dark rounded-3">
+            <div class="container-form col-xl-5 col-lg-6 col-md-8 col-9 position-absolute top-50 start-50 translate-middle">
+                <form class="border border-white border-2 px-4 pb-4 rounded-3">
                     <div class="row mx-auto">
-                        <p class="fs-2 text-center text-light mt-3">Create an Account</p>
+                        <p class="fs-2 text-center text-dark mt-3" style="font-family: Arial, Helvetica, sans-serif;">Create an Account <hr></p>
                         <div class="row mx-auto">
-                            <div class="scol-12 col-lg-6 col-xl-6 mb-3 mt-2">
-                                <input type="text" id="firstName" class="form-control" placeholder="First Name:" aria-label="firstName"
-                                    aria-describedby="firstName">
+                            <div class="col-12 col-lg-6 col-xl-6 mb-3 mt-2">
+                                <input type="text" id="firstName" class="form-control" placeholder="First Name:" aria-label="firstName" aria-describedby="firstName">
                             </div>
                             <div class="col-12 col-lg-6 col-xl-6 mb-3 mt-2">
-                                <input type="text" id="lastName" class="form-control" placeholder="Last Name:" aria-label="lastName"
-                                    aria-describedby="lastName">
+                                <input type="text" id="lastName" class="form-control" placeholder="Last Name:" aria-label="lastName" aria-describedby="lastName">
                             </div>
                         </div>
                         <div class="row mx-auto">
                             <div class="col-12 mb-3 mt-2">
-                                <input type="text" id="contact" class="form-control" placeholder="Contact:" aria-label="Contact"
-                                    aria-describedby="Contact">
+                                <input type="text" id="contact" class="form-control" placeholder="Contact:" aria-label="Contact" aria-describedby="Contact">
                                 <div id="contactFeedback" class="invalid-feedback"></div>
                             </div>
                             <div class="col-12 mb-2 mt-2">
-                                <input type="password" id="password" class="form-control" placeholder="Password:"
-                                    aria-label="Password" aria-describedby="Password">
+                                <input type="password" id="password" class="form-control" placeholder="Password:" aria-label="Password" aria-describedby="Password">
                             </div>
                         </div>
                         <div class="row mx-auto">
-                            <label for="birthdate" class="form-label text-light">Birthdate</label>
+                            <label for="birthdate" class="form-label">Birthdate</label>
                             <div class="form-group col-4">
                                 <select id="month" class="form-control" aria-placeholder="month">
                                     <!-- Add months here -->
@@ -60,36 +83,31 @@
                         </div>
                         <div class="d-flex justify-content-left ps-4 gap-3 mx-auto mt-3">
                             <div class="border border-white rounded-2 p-sm-1 p-md-2 p-lg-2 p-xl-2">
-                                <label class="form-check-label text-light me-xl-2 me-lg-2 me-md-2" for="Male">
+                                <label class="form-check-label text-dark me-xl-2 me-lg-2 me-md-2" for="Male">
                                     Male
                                 </label>
-                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio"
-                                    name="flexRadioDefault" id="Male">
+                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio" name="flexRadioDefault" id="Male">
                             </div>
                             <div class="border border-white rounded-2 p-sm-1 p-md-2 p-lg-2 p-xl-2">
-                                <label class="form-check-label text-light me-xl-2 me-lg-2 me-md-2" for="Female">
+                                <label class="form-check-label text-dark me-xl-2 me-lg-2 me-md-2" for="Female">
                                     Female
                                 </label>
-                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio"
-                                    name="flexRadioDefault" id="Female">
+                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio" name="flexRadioDefault" id="Female">
                             </div>
                         </div>
                         <div class="row mx-auto">
                             <div class="col-12 mt-3 mb-2" id="additional-textboxes"></div>
                             <div class="col-xl-12 mb-2 mt-2">
-                                <input type="text" id="username" class="form-control" placeholder="Username:" aria-label="Username"
-                                    aria-describedby="basic-addon1">
+                                <input type="text" id="username" class="form-control" placeholder="Username:" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
                     <div class="col-12 mt-3 text-center">
-                        <button type="submit"
-                            class="btn btn-dark btn-md border border-white px-5">Signup</button>
+                        <button type="submit" class="btn btn-custom btn-md border border-white px-5">Signup</button>
                     </div>
+                </form>
             </div>
-            </form>
         </div>
-    </div>
     </div>
 
     <script src="../../script/scriptCreateUserAccount.js"></script>

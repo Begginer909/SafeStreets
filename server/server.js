@@ -447,7 +447,6 @@ app.post('/notifications/view', (req, res) => {
 app.post('/notifications/send', (req, res) => {
   const { notificationID } = req.body;
 
-  // Move notification to tblreport
   const query = `
     INSERT INTO tblreport (accID, crimeType, description, latitude, longitude, street, createdAt)
     SELECT accID, crimeType, description, latitude, longitude, street, createdAt
@@ -461,38 +460,48 @@ app.post('/notifications/send', (req, res) => {
       return res.status(500).json({ message: 'Error sending notification.' });
     }
 
-    const sql = `SELECT * FROM tblreport where reportID = ?`;
-
-    // Remove notification from tblnotification
+    const sql = `SELECT * FROM tblreport WHERE reportID = ?`;
     const deleteQuery = `DELETE FROM tblnotification WHERE notificationID = ?`;
+
     db.query(deleteQuery, [notificationID], (deleteErr) => {
       if (deleteErr) {
         console.error(deleteErr);
         return res.status(500).json({ message: 'Error removing notification.' });
       }
 
-      const insertedID = result.insertId; // The ID of the inserted record
+      const insertedID = result.insertId;
 
-      db.query(sql,[insertedID], (err, reportResult) => {
-          if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Error feching report data'});
-          }
+      db.query(sql, [insertedID], async (err, reportResult) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Error fetching report data' });
+        }
 
-          const report = reportResult[0];
+         // Update circleID before emitting the event
+         await emitCircleData();
 
-          // Notify all connected clients about the new report
-          io.emit('incident_confirmed', report);
+        db.query(sql, [insertedID], async (err, result) => {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: 'Error fetching report data' });
+            }
+            try {
 
-          emitCircleData();
-
-          res.json({ message: 'Notification sent and confirmed.' });
-
+              report = result[0];
+    
+              io.emit("incident_confirmed", report);
+    
+              res.json({ message: 'Notification sent and confirmed.' });
+            } catch (error) {
+              console.error('Error updating circle data:', error);
+              res.status(500).json({ message: 'Error updating circle data.' });
+            }
+        })
       });
-
     });
   });
 });
+
 
 app.post('/notifications/delete', (req, res) => {
   const { notificationID } = req.body;
@@ -654,22 +663,21 @@ app.post('/delete/:id', (req, res) => {
 // Emit data to all connected clients whenever reports change
 function emitCircleData() {
   const circles = [
-    { id: 1, lat: 14.358134835918086, lng: 121.05912744998933, radius: 70}, // circle 5
-    { id: 2, lat: 14.358368694422813, lng: 121.05800628662111, radius: 70}, //circle 4
-    { id: 3, lat: 14.359368517975929, lng: 121.05887129902841, radius: 70}, //circle 3
-    { id: 4, lat: 14.35726371083779, lng: 121.0584729909897, radius: 70}, //circle 6
-    { id: 5, lat: 14.356084016287031, lng: 121.05936348438264, radius: 100}, //circle 7
-    { id: 6, lat: 14.354467772690725, lng: 121.0602378845215, radius: 100}, // circle 8
-    { id: 7, lat: 14.361260074803814, lng: 121.05718016624452, radius: 100}, //circle 1
-    { id: 8, lat: 14.353574221433659, lng: 121.0618042945862, radius: 70}, // circle 9 
-    { id: 9, lat: 14.351988816915645, lng: 121.0623461008072, radius: 100}, // circle 10
-    { id: 10, lat: 14.349915528714972, lng: 121.06334924697877, radius: 100}, // circle 11
-    { id: 11, lat: 14.359810491668052, lng: 121.05781316757204, radius: 70}, //circle 2
+    { id: 1, lat: 14.361260074803814, lng: 121.05718016624452, radius: 100 },
+    { id: 2, lat: 14.359810491668052, lng: 121.05781316757204, radius: 70 },
+    { id: 3, lat: 14.359368517975929, lng: 121.05887129902841, radius: 70 },
+    { id: 4, lat: 14.358368694422813, lng: 121.05800628662111, radius: 70 },
+    { id: 5, lat: 14.358134835918086, lng: 121.05912744998933, radius: 70 },
+    { id: 6, lat: 14.35726371083779, lng: 121.0584729909897, radius: 70 },
+    { id: 7, lat: 14.356084016287031, lng: 121.05936348438264, radius: 100 },
+    { id: 8, lat: 14.354467772690725, lng: 121.0602378845215, radius: 100 },
+    { id: 9, lat: 14.353574221433659, lng: 121.0618042945862, radius: 70 },
+    { id: 10, lat: 14.351988816915645, lng: 121.0623461008072, radius: 100 },
+    { id: 11, lat: 14.349915528714972, lng: 121.06334924697877, radius: 100 },
   ];
 
   const promises = circles.map(circle => {
     return new Promise((resolve, reject) => {
-      // Query to find reports in the circle
       const query = `
         SELECT reportID
         FROM tblreport
@@ -687,10 +695,8 @@ function emitCircleData() {
       db.query(query, (err, results) => {
         if (err) return reject(err);
 
-        // Extract reportIDs
         const reportIDs = results.map(row => row.reportID);
         if (reportIDs.length > 0) {
-          // Update the circleID for reports
           const updateQuery = `
             UPDATE tblreport
             SET circleID = ?
@@ -698,25 +704,21 @@ function emitCircleData() {
           `;
           db.query(updateQuery, [circle.id, ...reportIDs], (err) => {
             if (err) return reject(err);
-
-            console.log(reportIDs);
-
-            // Resolve with the count of updated reports
             resolve({ id: circle.id, count: reportIDs.length });
           });
         } else {
-          resolve({ id: circle.id, count: 0 }); // No reports in this circle
+          resolve({ id: circle.id, count: 0 });
         }
       });
     });
   });
 
-  Promise.all(promises)
+  return Promise.all(promises)
     .then(data => {
-      io.emit('circle-data', data); // Emit data to all connected clients
+      io.emit('circle-data', data); // Emit circle data to clients
       console.log('Emitting circle data:', data);
     })
-    .catch(err => console.error('Error fetching circle data:', err));
+    .catch(err => console.error('Error updating circle data:', err));
 }
 
 app.post('/api/reports', (req, res) => {
@@ -732,7 +734,7 @@ app.post('/api/reports', (req, res) => {
     query = `
       SELECT 
         DATE_FORMAT(createdAt, '%Y-%m-%d') as date, 
-        COUNT(*) as count 
+        COUNT(*) as count
       FROM tblreport 
       WHERE createdAt BETWEEN ? AND ? 
       GROUP BY DATE(createdAt)
@@ -756,6 +758,26 @@ app.post('/api/reports', (req, res) => {
     res.json(results);
   });
 });
+
+app.post('/staff/createReport', (req, res) =>{
+  const { accID, firstName, lastName, crimeType, description, street, date, area } = req.body;
+
+  let status = "confirmed";
+
+  const query = `INSERT INTO tblreportadded 
+  (accID, firstname, lastname, crimeType, description, street, date, status, circleID) 
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) 
+  `; 
+
+  const params = [accID, firstName, lastName, crimeType, description, street, date, status, area]
+
+      db.query(query, params, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        res.status(200).json({ message: 'Report created successfully' });
+      });
+})
+
 
 
 // Socket.IO
