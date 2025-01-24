@@ -41,51 +41,79 @@ const updateChart = (data, viewMode, startDate, endDate) => {
           .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
           .join(' ');
       };
-
-      const threshold = 40; // Initialize threshold value
       
         // Format data and generate datasets for Chart.js
         const labels = [...new Set(data.map(item => item.date))]; // Unique dates
+        const circleIDs = [...new Set(data.map(item => item.circleID))]; // Unique circle IDs
         const datasets = [];
+        const threshold = 40; // Initialize threshold value 
       
         if (viewMode === 'totalReports') {
-          datasets.push({
-            label: 'Total Reports (as % of Threshold)',
-            data: labels.map(date => {
-              const entry = data.find(item => item.date === date);
-              const count = entry ? entry.count : 0;
-              return ((count / threshold) * 100).toFixed(2); // Convert to percentage
-            }),
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1,
+          // Create a dataset for each circleID
+          circleIDs.forEach(circleID => {
+            const datasetData = labels.map(date => {
+              const entry = data.find(item => item.date === date && item.circleID === circleID);
+              return entry ? entry.count : 0; // Count for this date and circleID
+            });
 
-            counts: labels.map(date => {
-              const entry = data.find(item => item.date === date);
-              return entry ? entry.count : 0;
-            }), // Store raw counts
+            // Calculate total count for this circleID
+            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
 
-          });
-        } else if (viewMode === 'totalCategory') {
-          const crimeTypes = [...new Set(data.map(item => item.crimeType))]; // Unique crime types
-          crimeTypes.forEach(crimeType => {
+            // Calculate percentage based on the threshold
+            const percentageData = datasetData.map(count => {
+              return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+            });
+
             datasets.push({
-              label: `Crime: ${crimeType}`,
-              data: labels.map(date => {
-                const entry = data.find(item => item.date === date && item.crimeType === crimeType);
-                const count = entry ? entry.count : 0;
-                return ((count / threshold) * 100).toFixed(2); // Convert to percentage
-              }),
+              label: `Area: ${circleID}`,
+              data: percentageData,
               backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
               borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
               borderWidth: 1,
-
-              counts: labels.map(date => {
-                const entry = data.find(item => item.date === date && item.crimeType === crimeType);
-                return entry ? entry.count : 0;
-              }), // Store raw counts
+              counts: datasetData, // Set counts for later use
+              totalCount 
             });
           });
+
+          // Sort datasets based on totalCount in descending order
+          datasets.sort((a, b) => b.totalCount - a.totalCount);
+
+          // Check if datasets are created correctly
+          console.log("Datasets:", datasets);
+          console.log("Fetched Data:", data);
+        } 
+        else if (viewMode === 'totalCategory') {
+          const crimeTypes = [...new Set(data.map(item => item.crimeType))]; // Unique crime types
+          const crimeData = crimeTypes.map(crimeType => {
+            const counts = labels.map(date => {
+              const entry = data.find(item => item.date === date && item.crimeType === crimeType);
+              return entry ? entry.count : 0; // Count for this date and crimeType
+            });
+
+            // Calculate total count for this crime type
+            const totalCount = counts.reduce((sum, count) => sum + count, 0);
+
+            return {
+              crimeType,
+              counts,
+              totalCount,
+            };
+          });
+
+            // Sort crime data based on totalCount in descending order
+            crimeData.sort((a, b) => b.totalCount - a.totalCount);
+
+              // Create datasets based on sorted crime data
+              crimeData.forEach(({ crimeType, counts }) => {
+                datasets.push({
+                  label: `Crime: ${crimeType}`,
+                  data: counts.map(count => ((count / threshold) * 100).toFixed(2)), // Convert to percentage
+                  backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+                  borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                  borderWidth: 1,
+                  counts, // Store raw counts for later use
+                });
+              });
         }
       
         // Dynamically adjust the chart's width
@@ -124,6 +152,16 @@ const updateChart = (data, viewMode, startDate, endDate) => {
               x: {
                 maxRotation: 90,
                 minRotation: 45,
+                ticks:{
+                  callback: function(value, index, values) {
+                    // Check if the corresponding data value is zero
+                    const dataset = this.chart.data.datasets;
+                    const hasValue = dataset.some(ds => ds.data[index] > 0);
+                    return hasValue ? value : ''; // Return label or empty string
+                  }
+                },
+                barThickness: 50,
+                barPercentage: 0.5,
               },
               y: {
                   beginAtZero: true,
@@ -174,7 +212,7 @@ const updateChart = (data, viewMode, startDate, endDate) => {
                         : 'Total Reports';
 
                         const text = viewMode === "totalReports"
-                        ? `Total Count: ${totalCount}`
+                        ? `Area: ${dataset.label.split(': ')[1]} | Total Count: ${totalCount}`
                         : `Crime Type: ${crimeType} | Total Count: ${totalCount}`;
             
                       return {
@@ -203,24 +241,22 @@ const updateChart = (data, viewMode, startDate, endDate) => {
             },
           },
         });
-      };
+};
       
     
-      
+document.getElementById('filterButton').addEventListener('click', async () => {
+    const dateRange = document.getElementById('dateRange').value.split(' to ');
+    const viewMode = document.getElementById('viewMode').value;
+    const [startDate, endDate] = dateRange;
 
-    document.getElementById('filterButton').addEventListener('click', async () => {
-      const dateRange = document.getElementById('dateRange').value.split(' to ');
-      const viewMode = document.getElementById('viewMode').value;
-      const [startDate, endDate] = dateRange;
-
-      if (startDate && endDate) {
-        const data = await fetchChartData(viewMode, startDate, endDate);
-        updateChart(data, viewMode, startDate, endDate);
-        console.log("Data: " + data);
-      } else {
+    if (startDate && endDate) {
+      const data = await fetchChartData(viewMode, startDate, endDate);
+      updateChart(data, viewMode, startDate, endDate);
+      console.log("Data: " + data);
+    } else {
         alert('Please select a valid date range.');
       }
-    });
+});
 
 
     

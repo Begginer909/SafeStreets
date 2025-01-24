@@ -4,53 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../style/style.css">
     <title>Sign up</title>
-    <style>
-        body {
-            background-color: #2C3E50; /* Dark Blue */
-        }
-        .container-form {
-            background-color: #ECF0F1; /* Light Gray for the form */
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-        }
-        .form-control {
-            background-color: #FFFFFF; /* White for input fields */
-            color: #34495E; /* Dark Gray text */
-        }
-        .form-label {
-            color: #7F8C8D; /* Medium Gray for labels */
-        }
-        .btn-custom {
-            background-color: #E74C3C; /* Red for the button */
-            color: #FFFFFF; /* White text */
-        }
-        .btn-custom:hover{
-            background-color: #4962f2; /*  Blue for the button */
-            color: #FFFFFF; /* White text */
-        }
-        .text-dark {
-            color: #34495E !important; /* Ensure dark text for headings */
-        }
-    </style>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../style/User/signup.css">
+
 </head>
 
 <body>
 
     <div class="container-fluid">
         <div class="row mx-auto">
-            <div class="container-form col-xl-5 col-lg-6 col-md-8 col-9 position-absolute top-50 start-50 translate-middle">
+            <div class="container-form col-11 col-md-8 col-lg-6 position-relative mx-auto my-5">
                 <form class="border border-white border-2 px-4 pb-4 rounded-3">
                     <div class="row mx-auto">
                         <p class="fs-2 text-center text-dark mt-3" style="font-family: Arial, Helvetica, sans-serif;">Create an Account <hr></p>
                         <div class="row mx-auto">
-                            <div class="col-12 col-lg-6 col-xl-6 mb-3 mt-2">
+                            <div class="col-12 col-lg-6 mb-3 mt-2">
                                 <input type="text" id="firstName" class="form-control" placeholder="First Name:" aria-label="firstName" aria-describedby="firstName">
                             </div>
-                            <div class="col-12 col-lg-6 col-xl-6 mb-3 mt-2">
+                            <div class="col-12 col-lg-6 mb-3 mt-2">
                                 <input type="text" id="lastName" class="form-control" placeholder="Last Name:" aria-label="lastName" aria-describedby="lastName">
                             </div>
                         </div>
@@ -72,12 +44,12 @@
                             </div>
                             <div class="form-group col-4 mb-2">
                                 <select id="day" class="form-control" aria-placeholder="day">
-                                    <!-- Add days here -->
+                                     <!-- Add days here -->
                                 </select>
                             </div>
                             <div class="form-group col-4 mb-2">
                                 <select id="year" class="form-control" aria-placeholder="year">
-                                    <!-- Add years here-->
+                                    <!-- Add years here -->
                                 </select>
                             </div>
                         </div>
@@ -103,14 +75,17 @@
                         </div>
                     </div>
                     <div class="col-12 mt-3 text-center">
-                        <button type="submit" class="btn btn-custom btn-md border border-white px-5">Signup</button>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-custom btn-md border border-white w-50">Signup</button>
+                            <a href="../../pages/public/index.html" class="btn btn-custom btn-md border border-white w-50">Back</a>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="../../script/scriptCreateUserAccount.js"></script>
+    <script src="../../script/User/scriptCreateUserAccount.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
 </body>
 

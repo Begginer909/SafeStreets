@@ -34,17 +34,33 @@ async function getLocation() {
             document.getElementById('longitude').value = position.coords.longitude;
 
             // Get the street address
-            const street = await getStreetAddress(position.coords.latitude, position.coords.longitude);
-            console.log('Street:', street);
+            //const street = await getStreetAddress(position.coords.latitude, position.coords.longitude);
+            //console.log('Street:', street);
 
             // Set the street address in a global variable or DOM if needed
-            document.getElementById('street').value = street; // Set it to an input field (optional)
+            //document.getElementById('street').value = street; // Set it to an input field (optional)
         }, (error) => {
             alert("Unable to fetch location: " + error.message);
         });
     } else {
         alert("Geolocation is not supported by this browser.");
     }
+}
+
+//FOR TESTING ONLY WHEN USER LOCATION IS NOT SAKOP NG BRGY
+function getStreet(){
+    const lat = document.getElementById('latitude').value;
+    const long = document.getElementById('longitude').value;
+
+    if(!lat && !long){
+        alert("Walang lat and long");
+    }
+    else{
+        getStreetAddress(lat, long).then(street => {
+            document.getElementById('street').value = street;
+        });
+    }
+    
 }
 
 // Define getStreetAddress function
@@ -75,6 +91,9 @@ function getStreetAddress(lat, lon) {
 
 // Call getLocation when the page loads to fetch the user's location
 document.addEventListener('DOMContentLoaded', getLocation);
+
+// Button for getting the location
+document.getElementById('getLocation').addEventListener('click', getStreet);
 
 // Handle form submission
 document.getElementById('crime-report-form').addEventListener('submit', async (e) => {

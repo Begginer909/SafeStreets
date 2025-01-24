@@ -75,7 +75,7 @@ app.post('/login/:role', async (req, res) => {
     }
 
     if (!results.length) {
-      return res.status(401).json({ message: 'Invalid credentials or role mismatch.' });
+      return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     const user = results[0];
@@ -733,11 +733,13 @@ app.post('/api/reports', (req, res) => {
   if (viewMode === 'totalReports') {
     query = `
       SELECT 
-        DATE_FORMAT(createdAt, '%Y-%m-%d') as date, 
+        DATE_FORMAT(createdAt, '%Y-%m-%d') as date,
+        circleID,
         COUNT(*) as count
       FROM tblreport 
-      WHERE createdAt BETWEEN ? AND ? 
-      GROUP BY DATE(createdAt)
+      WHERE createdAt BETWEEN ? AND ? AND circleID != 0
+      GROUP BY date, circleID
+      ORDER BY date, circleID
     `;
   } else if (viewMode === 'totalCategory') {
     query = `
@@ -756,13 +758,25 @@ app.post('/api/reports', (req, res) => {
   db.query(query, params, (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(results);
+
+    console.log(params);
   });
+  
 });
 
 app.post('/staff/createReport', (req, res) =>{
   const { accID, firstName, lastName, crimeType, description, street, date, area } = req.body;
 
   let status = "confirmed";
+
+  let bool
+  ;
+  if(!accID || !firstName || !lastName || !crimeType || !description || street || date || area){
+    bool = false;
+  }
+  else{
+    bool = true
+  }
 
   const query = `INSERT INTO tblreportadded 
   (accID, firstname, lastname, crimeType, description, street, date, status, circleID) 
@@ -771,14 +785,114 @@ app.post('/staff/createReport', (req, res) =>{
 
   const params = [accID, firstName, lastName, crimeType, description, street, date, status, area]
 
-      db.query(query, params, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-
-        res.status(200).json({ message: 'Report created successfully' });
-      });
+  if(bool){
+    db.query(query, params, (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+    });
+  }
 })
 
+// API endpoint to get crime reports
+app.get('/api/crime-reports', (req, res) => {
+  const query = `
+      SELECT 
+          r.reportID AS reportID,
+          i.firstName AS firstName,
+          i.lastName AS lastName,
+          r.crimeType AS crimeType,
+          r.description AS description,
+          r.street AS street,
+          r.createdAt AS date,
+          r.circleID AS circleID,
+          r.status AS status,
+          'tblreport' AS source
+      FROM tblreport r
+      INNER JOIN 
+          tblaccount a ON r.accID = a.accountID
+      INNER JOIN 
+          tbl_information i ON i.userID = a.userID
+      UNION ALL
+      SELECT 
+          ra.reportID AS reportID,
+          ra.firstname AS firstName,
+          ra.lastname AS lastName,
+          ra.crimeType AS crimeType,
+          ra.description AS description,
+          ra.street AS street,
+          ra.date AS date,
+          ra.circleID AS circleID,
+          ra.status AS status,
+          'tblreportAdded' AS source
+      FROM 
+          tblreportAdded ra
+      INNER JOIN 
+          tblaccount a ON ra.accID = a.accountID
+      INNER JOIN 
+          tbl_information i ON i.userID = a.userID
+  `;
 
+  db.query(query, (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          return res.status(500).json({ error: 'Database query failed' });
+      }
+      res.json(results);
+  });
+});
+
+// API endpoint to update a crime report
+app.put('/api/crime-reports-update/:id', (req, res) => {
+  const reportID = req.params.id;
+  const {crimeType, description, street, circleID, source, status } = req.body;
+
+  let query;
+  if (source === 'tblreportadded') {
+      query = `
+          UPDATE tblreportAdded
+          SET crimeType = ?, description = ?, street = ?, circleID = ?, status = ?
+          WHERE reportID = ?
+      `;
+  } else if (source === 'tblreport') {
+      query = `
+          UPDATE tblreport
+          SET crimeType = ?, description = ?, street = ?, circleID = ?, status = ?
+          WHERE reportID = ?
+      `;
+  } else {
+    return res.status(400).json({ error: 'Invalid source' });
+}
+
+  db.query(query, [crimeType, description, street, circleID, status, reportID], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          return res.status(500).json({ error: 'Database query failed' });
+      }
+      res.status(204).send(); // No content to send back
+  });
+});
+
+// API endpoint to delete a crime report
+app.delete('/api/crime-reports/:id', (req, res) => {
+  const reportID = req.params.id;
+  const { source } = req.body; // Get the source from the request body
+
+  let query;
+  if (source === 'tblreport') {
+      query = 'DELETE FROM tblreport WHERE reportID = ?';
+  } else if (source === 'tblreportAdded') {
+      query = 'DELETE FROM tblreportAdded WHERE reportID = ?';
+  } else {
+      return res.status(400).json({ error: 'Invalid source' });
+  }
+
+  db.query(query, [reportID], (err, results) => {
+      if (err) {
+          console.error('Error executing query:', err);
+          return res.status(500).json({ error: 'Database query failed' });
+      }
+      res.status(204).send(); // No content to send back
+  });
+});
 
 // Socket.IO
 io.on('connection', (socket) => {

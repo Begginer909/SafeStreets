@@ -1,0 +1,51 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background-color: #f4f4f4;
+}
+
+.home-content {
+    background-color: #4a6c96;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    color: white;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2em;
+}
+
+.contact-item i {
+    font-size: 1.5em;
+}
+
+.events-section {
+    background-color: #4a6c96;
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-item{
+    width: 100%;
+    height: auto; /* Maintain image aspect ratio */
+    object-fit: contain; /* Adjust the image without cropping */
+    min-height: 300px;
+}

@@ -1,0 +1,45 @@
+/* Navbar Styles */
+#navbarCol {
+    width: 250px; /* Fixed width for the sidebar */
+    background-color: #2C3E50; /* Background color for the navbar */
+    color: white; /* Text color */
+    padding-top: 20px; /* Padding at the top */
+    position: fixed; /* Fix the sidebar to the left */
+    height: 100%; /* Full height */
+    overflow-y: auto; /* Scroll if content overflows */
+    transition: width 0.3s; /* Smooth transition for collapsible effect */
+}
+
+.navbar-brand {
+    padding: 10px 15px; /* Adjust padding for the brand */
+}
+
+.nav-link {
+    color: white; /* Text color for links */
+    padding: 15px 20px; /* Add padding for nav links */
+    font-size: 16px; /* Adjust font size */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    display: flex; /* Flexbox for icon and text alignment */
+    align-items: center; /* Center items vertically */
+}
+
+.nav-link i {
+    margin-right: 10px; /* Space between icon and text */
+}
+
+.nav-link:hover {
+    background-color: #34495e; /* Change background on hover */
+}
+
+.nav-link.active {
+    background-color: #1abc9c; /* Highlight active link */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #navbarCol {
+        width: 100%; /* Full width on small screens */
+        height: auto; /* Auto height */
+        position: relative; /* Relative positioning */
+    }
+}
