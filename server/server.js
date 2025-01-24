@@ -764,33 +764,30 @@ app.post('/api/reports', (req, res) => {
   
 });
 
-app.post('/staff/createReport', (req, res) =>{
+app.post('/staff/createReport', (req, res) => {
   const { accID, firstName, lastName, crimeType, description, street, date, area } = req.body;
 
-  let status = "confirmed";
-
-  let bool
-  ;
-  if(!accID || !firstName || !lastName || !crimeType || !description || street || date || area){
-    bool = false;
-  }
-  else{
-    bool = true
+  // Check for required fields
+  if (!accID || !firstName || !lastName || !crimeType || !description || !street || !date || !area) {
+      return res.status(400).json({ message: "All fields are required." });
   }
 
+  const status = "confirmed"; // You can set this based on your logic
   const query = `INSERT INTO tblreportadded 
-  (accID, firstname, lastname, crimeType, description, street, date, status, circleID) 
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) 
-  `; 
+                 (accID, firstname, lastname, crimeType, description, street, date, status, circleID) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  const params = [accID, firstName, lastName, crimeType, description, street, date, status, area]
+  const params = [accID, firstName, lastName, crimeType, description, street, date, status, area];
 
-  if(bool){
-    db.query(query, params, (err, results) => {
-      if (err) return res.status(500).json({ error: err.message });
-    });
-  }
-})
+  db.query(query, params, (err, results) => {
+      if (err) {
+          return res.status(500).json({ error: err.message });
+      }
+
+      // Send a success response
+      res.status(201).json({ message: "Report submitted successfully!" });
+  });
+});
 
 // API endpoint to get crime reports
 app.get('/api/crime-reports', (req, res) => {

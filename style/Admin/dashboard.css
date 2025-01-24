@@ -12,14 +12,40 @@ body {
     overflow-y: auto; /* Scroll if content overflows */
 }
 .card {
-    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+    background: linear-gradient(135deg, #1abc9c, #16a085); /* Gradient background */
+    border: 1px solid #16a085; /* Slightly darker teal border for contrast */
     border-radius: 10px; /* Rounded corners */
-    background-color: #ffffff; /* White background for cards */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition */
+    position: relative; /* For badge positioning */
+    color: white; /* White text for better contrast */
 }
+
 .card:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+    transform: scale(1.05); /* Scale effect on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Larger title */
+    font-weight: bold; /* Bold title */
+    color: white; /* White color for titles */
+}
+
+.card-text {
+    color: rgba(255, 255, 255, 0.8); /* Muted white text color for description */
+}
+
+.badge {
+    font-size: 1rem; /* Adjust badge size */
+    position: absolute; /* Position badge */
+    top: 10px; /* Adjust position */
+    right: 10px; /* Adjust position */
+    background-color: #dc3545; /* Red background for notifications */
+    color: white; /* White text for badge */
+}
+
+.card i {
+    color: white; /* White color for icons */
 }
 @media (max-width: 768px) {
     #content {
