@@ -113,8 +113,8 @@ socketUser.on('incident_confirmed', (report) => {
     // Add a new marker to the map for the reported crime
     const marker = L.marker([report.latitude, report.longitude]).addTo(map);
     marker.bindPopup(`
-        <div style="text-transform: capitalize; font-size: 15px; color: ${color}">
-            <div style="text-align: center; font-size: 20px">
+        <div style="text-transform: capitalize; font-size: 8px; color: ${color}">
+            <div style="text-align: center; font-size: 10px">
             <b>AREA:  ${report.circleID} </b> <br><hr>
             </div>
             <b>Crime Type:</b> ${report.crimeType}<br>
