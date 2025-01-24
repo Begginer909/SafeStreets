@@ -1,14 +1,14 @@
-@media (min-width: 965px) {
-    .border-responsive {
-        border-right: 1px solid white; /* Example border */
-    }
+#map{
+    width: 100%; /* Full width */
+    height: 60vh; /* 60% of the viewport height */
+    border: 1px solid #ccc; /* Optional: Add a border for visibility */
 }
 
-#map{
-    height: 500px;
-    width: 100%;
-    max-width: 100%;
-    border: 1px solid black;
+/* Optional: Adjust the map container for smaller screens */
+@media (max-width: 576px) {
+    #map {
+        height: 40vh; /* Reduce height on small screens */
+    }
 }
 
 .circle-tooltip {
@@ -21,22 +21,6 @@
 }
 
 
-/* Dynamic width adjustment for the chart container */
-#chartContainer {
-    overflow-x: auto; /* Enable horizontal scrolling only within this container */
-    overflow-y: hidden; /* Prevent vertical scrolling */
-    white-space: nowrap; /* Prevent elements from wrapping */
-    max-width: 100%; /* Ensure container does not exceed its parent width */
-    
-}
-  
-canvas {
-    display: block;
-    max-width: none; /* Allow canvas to exceed the container width */
-    position: relative;
-}
-
-
 .map{
     max-width: 100%;
     margin-left: auto;
@@ -45,9 +29,5 @@ canvas {
 
 #content {
     transition: width 0.5s ease; /* Smooth transition for the width adjustment */
-}
-
-#navbarCol {
-    transition: width 0.5s ease; /* Smooth transition for navbar as well */
 }
 

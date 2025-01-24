@@ -1,61 +1,81 @@
-<form id="createReportForm">
-  <label for="crimeType">Crime Type:</label>
-  <input type="text" id="crimeType" name="crimeType" required><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Signup Carousel</title>
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background */
+        }
+        .carousel-item {
+            height: 400px; /* Set a fixed height for the carousel */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff; /* White background for carousel items */
+        }
+        .carousel-image {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+        .carousel-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+        .btn {
+            background-color: #007bff; /* Primary button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
 
-  <label for="description">Description:</label>
-  <textarea id="description" name="description" required></textarea><br><br>
+<div id="loginSignupCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="image1.jpg" class="carousel-image" alt="Image 1">
+        </div>
+        <div class="carousel-item">
+            <img src="image2.jpg" class="carousel-image" alt="Image 2">
+        </div>
+        <div class="carousel-item">
+            <img src="image3.jpg" class="carousel-image" alt="Image 3">
+        </div>
+        <div class="carousel-item">
+            <img src="image4.jpg" class="carousel-image" alt="Image 4">
+        </div>
+        <div class="carousel-item">
+            <img src="image5.jpg" class="carousel-image" alt="Image 5">
+        </div>
+    </div>
+    <div class="carousel-controls">
+        <button class="btn" onclick="location.href='login.html'">Login</button>
+        <button class="btn" onclick="location.href='signup.html'">Signup</button>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#loginSignupCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#loginSignupCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 
-  <label for="latitude">Latitude:</label>
-  <input type="number" id="latitude" name="latitude" step="0.000001" required><br><br>
-
-  <label for="longitude">Longitude:</label>
-  <input type="number" id="longitude" name="longitude" step="0.000001" required><br><br>
-
-  <label for="street">Street:</label>
-  <input type="text" id="street" name="street" required><br><br>
-
-  <label>
-      <input type="checkbox" id="manualEntry" name="isManual"> Manual Entry
-  </label><br><br>
-
-  <div id="manualFields" style="display: none;">
-      <label for="createdAt">Created At:</label>
-      <input type="datetime-local" id="createdAt" name="createdAt"><br><br>
-  </div>
-
-  <label for="status">Status:</label>
-  <select id="status" name="status" required>
-      <option value="confirmed">Confirmed</option>
-  </select><br><br>
-
-  <label for="circleID">Circle ID:</label>
-  <input type="number" id="circleID" name="circleID" required><br><br>
-
-  <button type="submit">Submit</button>
-</form>
-
-<script>
-  const manualEntryCheckbox = document.getElementById('manualEntry');
-  const manualFields = document.getElementById('manualFields');
-
-  manualEntryCheckbox.addEventListener('change', () => {
-      manualFields.style.display = manualEntryCheckbox.checked ? 'block' : 'none';
-  });
-
-  document.getElementById('createReportForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
-      data.isManual = manualEntryCheckbox.checked;
-
-      const response = await fetch('/api/createReport', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      alert(result.message);
-  });
-</script>
+<script src="../../bootstrap/js/bootstrap.js"></script>
+</body>
+</html>

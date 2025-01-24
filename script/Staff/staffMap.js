@@ -86,23 +86,3 @@ socketStaff.on('circle-data', (data) => {
         leafletCircles[index].setStyle({ color: newColor });
       });
 });
-
-//PRINTING AND SAVING AS PDF
-
-const expandButton = document.getElementById('expandButton');
-const saveButton = document.getElementById('saveButton');
-
-// Toggle expansion for print/save
-expandButton.addEventListener('click', () => {
-    chartContainer.classList.toggle('expanded');
-});
-
-// Save chart as PDF
-saveButton.addEventListener('click', () => {
-    const canvas = document.getElementById('crimeChart');
-    const canvasImage = canvas.toDataURL('image/png', 1.0);
-
-    const pdf = new jsPDF('landscape');
-    pdf.addImage(canvasImage, 'PNG', 10, 10, 280, 150);
-    pdf.save('crime_chart.pdf');
-});

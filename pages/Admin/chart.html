@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="../../style/styleStaff.css">
+    <link rel="stylesheet" href="../../style/style.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../style/Staff/navbar.css">
+    <link rel="stylesheet" href="../../style/Staff/dashboard.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+</head>
+<body>
+
+<div class="container-fluid">  
+    
+    <div class="row flex-grow-1">
+        <div class="col-2" id="navbarCol">
+            <nav class="navbar navbar-dark flex-column">
+                <a class="navbar-brand mb-3" href="#">
+                    <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px">
+                </a>
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="chart.html"><i class="fas fa-chart-bar"></i>Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="map.html"><i class="fas fa-map"></i>Crime Density Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AdminLogin.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-10" id="content">
+
+            <div class="container-fluid my-4">
+                <h1 class="text-center mb-1">Crime Reports Chart<hr></h1>
+            
+                <!-- Filter Section -->
+                <div class="card p-3 mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="viewMode" class="form-label">View Mode:</label>
+                            <select id="viewMode" class="form-select">
+                                <option value="totalCategory">Category Reports</option>
+                                <option value="totalReports">Total Reports</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="dateRange" class="form-label">Date Range:</label>
+                            <input id="dateRange" type="text" class="form-control" placeholder="Select date range">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button id="filterButton" class="btn btn-primary w-100">Filter</button>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="card p-3 mb-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <button id="expandButton" class="btn btn-secondary w-100">Expand for Print</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button id="saveButton" class="btn btn-secondary w-100">Save as PDF</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-3">
+                    <div id="chartContainer" style="overflow-x: auto; white-space: nowrap;">
+                        <canvas id="crimeChart" style="min-width: 1100px;"></canvas>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <script src="../../script/Staff/chart.js"></script> 
+    <script src="../../script/print.js"></script>
+</body>
+</html>	

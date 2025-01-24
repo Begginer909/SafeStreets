@@ -1,0 +1,168 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #F5F5F5;
+    color: #34495E;
+}
+
+/* Header Styling */
+.header {
+    background-color: #2C3E50;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container-fluid {
+    margin-top: 70px; /* Adjust based on the header height */
+}
+
+.header .logo img {
+    height: 50px;
+}
+
+.header-buttons .btn {
+    background-color: #DAA520;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.header-buttons .btn:hover {
+    background-color: #B8860B;
+    transform: scale(1.05);
+}
+
+.hotline, .contact {
+    text-align: center;
+    font-size: 18px;
+    margin: 10px auto;
+    background-color: #2C3E50;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.hotline p, .contact p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+
+/* Carousel Styling */
+.carousel-container {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    filter: invert(1);
+}
+
+.carousel-control-prev, .carousel-control-next {
+    transition: transform 0.2s ease;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+    transform: scale(1.1);
+}
+
+
+/* Modal Styles */
+.modal-content {
+    background-color: #F5F5F5;
+    border: 2px solid #DAA520;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease;
+    max-width: 500px; /* Set a maximum width for larger screens */
+}
+
+@media (min-width: 992px) {
+    .modal-dialog {
+        max-width: 400px; /* Adjust modal width for large screens */
+    }
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto; /* Maintain image aspect ratio */
+    object-fit: contain; /* Adjust the image without cropping */
+    min-height: 300px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    background-color: #2C3E50;
+    color: white;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.form-control {
+    background-color: #D6EAF8;
+    color: #34495E;
+    border: 1px solid #2C3E50;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(218, 165, 32, 0.4);
+}
+
+.btn-custom {
+    background-color: #2C3E50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-custom:hover {
+    background-color: #34495E;
+    color:white;
+}
+
+@media (min-width: 320px) and (max-width: 567px) {
+    .carousel-container {
+        min-height: 568px; /* Minimum height for smaller screens */
+        padding: 10px;
+    }
+
+    .hotline, .contact {
+        font-size: 16px;
+        width: 80%; /* Smaller width for small screens */
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 768px) {
+    .hotline, .contact {
+        width: 40%; /* Adjust width for larger screens */
+    }
+}
+

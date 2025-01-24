@@ -1,0 +1,77 @@
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+#content {
+    margin-left: 250px; /* Leave space for the sidebar */
+    padding: 20px;
+    background-color: #ecf0f1;
+    flex-grow: 1; /* Allow content to grow */
+    overflow-y: auto; /* Scroll if content overflows */
+}
+.card {
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #ffffff; /* White background for cards */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+.card:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+@media (max-width: 768px) {
+    #content {
+        margin-left: 0; /* No margin on small screens */
+    }
+}
+
+/* Add this CSS to your existing styles */
+.table td {
+    vertical-align: middle; /* Center align the content vertically */
+}
+
+.table .action-buttons {
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: flex-start; /* Align buttons to the start */
+    align-items: center; /* Center buttons vertically */
+}
+
+.table .btn {
+    margin-right: 5px; /* Add some space between buttons */
+}
+
+.modal-body {
+    padding: 20px; /* Add padding to the modal body */
+}
+
+.table th, .table td {
+    vertical-align: middle; /* Center align text vertically */
+}
+
+.table-striped tbody tr:hover {
+    background-color: #f1f1f1; /* Light gray background on hover */
+}
+
+.table th {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text for headers */
+}
+
+.table td {
+    text-align: left; /* Left align text in table cells */
+}
+
+.modal-body {
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.table {
+    min-width: 1000px; /* Set a minimum width for the table */
+}
+
+.scrollable-table {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent text wrapping */
+}

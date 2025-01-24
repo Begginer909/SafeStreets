@@ -44,6 +44,34 @@ map.setMaxBounds(bounds);
 // Connect to the Socket.IO server
 const socketUser = io('http://localhost:3000');
 
+// Function to get URL parameters
+function getUrlParams() {
+    const params = {};
+    const queryString = window.location.search.substring(1);
+    const regex = /([^&=]+)=([^&]*)/g;
+    let m;
+    while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    return params;
+}
+
+// Get report details from URL parameters
+const params = getUrlParams();
+
+console.log("Params: " + params);
+if (params.reportId && params.description && params.location) {
+    const location = JSON.parse(params.location); // Parse the location back to an object
+    const marker = L.marker([location.lat, location.lng]).addTo(map)
+        .bindPopup(`
+            <div>
+                <b>Report ID: ${params.reportId}</b><br>
+                <b>Description: ${params.description}</b>
+            </div>
+        `)
+        .openPopup();
+}
+
 // Listen for new crime reports
 socketUser.on('incident_confirmed', (report) => {
     console.log('New report received:', report);
