@@ -4,6 +4,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
+
 #content {
     margin-left: 250px; /* Leave space for the sidebar */
     padding: 20px;
@@ -93,11 +94,34 @@ body {
     overflow-x: auto; /* Enable horizontal scrolling */
 }
 
+.modal-content {
+    width: 100%; /* Ensure modal content takes full width */
+}
+
 .table {
-    min-width: 1000px; /* Set a minimum width for the table */
+    width: 100%; /* Ensure table takes full width */
+    max-width: 100%; /* Prevent exceeding modal width */
 }
 
 .scrollable-table {
     overflow-x: auto; /* Enable horizontal scrolling */
     white-space: nowrap; /* Prevent text wrapping */
+}
+
+.carousel-container {
+    width: 80%; /* Set the desired width */
+    height: auto;
+    max-width: 800px; /* Set a maximum width */
+    margin: auto; /* Center the carousel */
+}
+
+.carousel-item {
+    height: 500px; /* Fixed height */
+    overflow: hidden; /* Hide overflow */
+}
+
+.carousel-item img {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    object-fit: cover; /* Cover the container while maintaining aspect ratio */
 }

@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const tableBody = document.getElementById('crimeReportsTableBody'); // Ensure this ID matches
 
+    // Create modal instances once
+    const crimeReportsModal = new bootstrap.Modal(document.getElementById('crimeReportsModal'));
+    const editModal = new bootstrap.Modal(document.getElementById('editReportModal'));
+
+
     document.getElementById('openCrimeReportsModal').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent the default anchor click behavior
 
@@ -16,9 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 crimeTypeFilter.addEventListener('change', () => filterTable(data));
                 searchInput.addEventListener('input', () => filterTable(data));
     
-                // Show the modal
-                const modal = new bootstrap.Modal(document.getElementById('crimeReportsModal'));
-                modal.show(); // Show the modal after populating the table
+                crimeReportsModal.show(); // Show the modal after populating the table
             })
             .catch(error => {
                 console.error('Error fetching crime reports:', error);
@@ -26,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function fetchDataAndPopulateTable(){
+        
         // Fetch data from the server
         fetch('http://localhost:3000/api/crime-reports') // Adjust the endpoint as necessary
         .then(response => response.json())
@@ -36,9 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             crimeTypeFilter.addEventListener('change', () => filterTable(data));
             searchInput.addEventListener('input', () => filterTable(data));
 
-            // Show the modal
-            const modal = new bootstrap.Modal(document.getElementById('crimeReportsModal'));
-            modal.show(); // Show the modal after populating the table
+            crimeReportsModal.show(); // Show the modal after populating the table
         })
         .catch(error => {
             console.error('Error fetching crime reports:', error);
@@ -104,8 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('status').value = report.status;
         document.getElementById('editReportID').value = report.reportID; // Set the report ID
     
-        // Show the edit modal
-        const editModal = new bootstrap.Modal(document.getElementById('editReportModal'));
         editModal.show();
     
         // Handle the save button click
@@ -121,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 status: document.getElementById('status').value,
                 source: report.source,
             };
-
             // Make a PUT request to update the report
             fetch(`http://localhost:3000/api/crime-reports-update/${updatedReport.reportID}`, {
                 method: 'PUT',
@@ -133,8 +132,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 if (response.ok) {
                     console.log('Report updated successfully');
-                    fetchDataAndPopulateTable(); // Refresh the table data
-                    editModal.hide(); // Hide the edit modal
+                    fetchDataAndPopulateTable(); // Refresh the table data // Hide the edit modal
+                    editModal.hide();
                 } else {
                     console.error('Error updating report');
                 }   
@@ -171,5 +170,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
             });
         }
-    }
+    }   
 });

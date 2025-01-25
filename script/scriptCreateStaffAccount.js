@@ -30,10 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to populate days based on selected month and year
     function populateDays(year, month) {
-        while (daySelect.options.length > 0) {
-            daySelect.remove(0);
-        }
 
+        // Get the number of days in the selected month
         let daysInMonth = new Date(year, month, 0).getDate();
         for (let day = 1; day <= daysInMonth; day++) {
             let option = document.createElement('option');
@@ -41,10 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
             option.text = day;
             daySelect.add(option);
         }
+
+        // Re-select the previously selected day if it's still valid
+        if (daySelect.value > daysInMonth) {
+            daySelect.value = daysInMonth; // Set to the last day of the month if the current day is invalid
+        } else if (daySelect.value < 1) {
+            daySelect.value = 1; // Ensure at least the first day is selected
+        }
     }
 
     // Initial population of days
-    populateDays(yearSelect.value, monthSelect.value);
+    populateDays(currentYear, currentMonth);
 
     // Set default selected values to today's date
     yearSelect.value = currentYear;
@@ -61,59 +66,75 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.querySelector('#staffRegistrationForm').addEventListener('submit', async function (e) {
-    e.preventDefault(); // Prevent form from reloading the page
+document.querySelector('form').addEventListener('submit', async function (e) {
+e.preventDefault(); // Prevent form from reloading the page
 
-    // Collect form data
-    const formData = {
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        contact: document.getElementById('contact').value.trim(),
-        password: document.getElementById('password').value.trim(),
-        birthdate: `${document.getElementById('year').value}-${document.getElementById('month').value}-${document.getElementById('day').value}`,
-        gender: document.querySelector('input[name="flexRadioDefault"]:checked')?.id || '',
-        username: document.getElementById('username').value.trim(),
-        role: document.getElementById('role').value.trim(),
-    };
+// Collect form data
+const formData = {
+    firstName: document.getElementById('firstName').value.trim(),
+    lastName: document.getElementById('lastName').value.trim(),
+    contact: document.getElementById('contact').value.trim(),
+    password: document.getElementById('password').value.trim(),
+    birthdate: `${document.getElementById('year').value}-${document.getElementById('month').value}-${document.getElementById('day').value}`,
+    gender: document.querySelector('input[name="flexRadioDefault"]:checked')?.id || '',
+    username: document.getElementById('username').value.trim(),
+};
 
-    // Validate contact number
-    if (!/^\d{11}$/.test(formData.contact)) {
-        alert('Contact number must be 11 digits and contain only numbers.');
+// Validate contact number
+if (!/^\d{11}$/.test(formData.contact)) {
+    alert('Contact number must be 11 digits and contain only numbers.');
+    return;
+}
+
+// Validate username
+try {
+    const usernameCheckResponse = await fetch(`http://localhost:3000/check-username?username=${formData.username}`);
+    const usernameCheckResult = await usernameCheckResponse.json();
+
+    if (usernameCheckResult.exists) {
+        alert('The username is already taken. Please choose another one.');
         return;
     }
+} catch (error) {
+    console.error('Error checking username:', error);
+    alert('An error occurred while checking the username. Please try again.');
+    return;
+}
 
-    // Validate username
-    try {
-        const usernameCheckResponse = await fetch(`http://localhost:3000/check-username?username=${formData.username}`);
-        const usernameCheckResult = await usernameCheckResponse.json();
+try {
+    // Send data to the backend
+    const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData), 
+    });
 
-        if (usernameCheckResult.exists) {
-            alert('The username is already taken. Please choose another one.');
-            return;
-        }
-    } catch (error) {
-        console.error('Error checking username:', error);
-        alert('An error occurred while checking the username. Please try again.');
-        return;
+    const result = await response.json();
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = '../../pages/public/index.html'; // Redirect after success
+    } else {
+        alert('Error: ' + result.error);
     }
-    
-    try {
-        // Send data to the backend
-        const response = await fetch('http://localhost:3000/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-        });
+} catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while registering.');
+}
+});
 
-        const result = await response.json();
-        if (response.ok) {
-            alert(result.message);
-            document.getElementById('staffRegistrationForm').reset();
-        } else {
-            alert('Error: ' + result.error);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while registering.');
+
+document.getElementById('contact').addEventListener('input', function () {
+    const contact = this.value.trim();
+    const contactFeedback = document.getElementById('contactFeedback');
+
+    if (!/^\d*$/.test(contact)) {
+        this.classList.add('is-invalid');
+        contactFeedback.textContent = 'Contact number must contain only digits.';
+    } else if (contact.length > 11) {
+        this.classList.add('is-invalid');
+        contactFeedback.textContent = 'Contact number must be exactly 11 digits.';
+    } else {
+        this.classList.remove('is-invalid');
+        contactFeedback.textContent = '';
     }
 });
