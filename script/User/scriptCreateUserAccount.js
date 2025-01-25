@@ -30,10 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to populate days based on selected month and year
     function populateDays(year, month) {
-        while (daySelect.options.length > 0) {
-            daySelect.remove(0);
-        }
 
+        // Get the number of days in the selected month
         let daysInMonth = new Date(year, month, 0).getDate();
         for (let day = 1; day <= daysInMonth; day++) {
             let option = document.createElement('option');
@@ -41,10 +39,17 @@ document.addEventListener('DOMContentLoaded', function () {
             option.text = day;
             daySelect.add(option);
         }
+
+        // Re-select the previously selected day if it's still valid
+        if (daySelect.value > daysInMonth) {
+            daySelect.value = daysInMonth; // Set to the last day of the month if the current day is invalid
+        } else if (daySelect.value < 1) {
+            daySelect.value = 1; // Ensure at least the first day is selected
+        }
     }
 
     // Initial population of days
-    populateDays(yearSelect.value, monthSelect.value);
+    populateDays(currentYear, currentMonth);
 
     // Set default selected values to today's date
     yearSelect.value = currentYear;

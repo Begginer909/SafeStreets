@@ -298,7 +298,7 @@ app.put('/updateAccount/:id', async (req, res) => {
       res.json({ message: 'Account updated successfully' });
   } catch (err) {
       console.error(err);
-      res.status(500).json({ error: 'An error occurred while updating the account' });
+      res.status(500).json({ error: 'Username is already taken' });
   }
 });
 
@@ -843,7 +843,7 @@ app.put('/api/crime-reports-update/:id', (req, res) => {
   const {crimeType, description, street, circleID, source, status } = req.body;
 
   let query;
-  if (source === 'tblreportadded') {
+  if (source === 'tblreportAdded') {
       query = `
           UPDATE tblreportAdded
           SET crimeType = ?, description = ?, street = ?, circleID = ?, status = ?
