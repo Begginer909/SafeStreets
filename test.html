@@ -5,76 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login and Signup Carousel</title>
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
-    <style>
-        body {
-            background-color: #f8f9fa; /* Light background */
-        }
-        .carousel-item {
-            height: 400px; /* Set a fixed height for the carousel */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #ffffff; /* White background for carousel items */
-        }
-        .carousel-image {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 10px;
-        }
-        .carousel-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-        }
-        .btn {
-            background-color: #007bff; /* Primary button color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #0056b3; /* Darker shade on hover */
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
 
-<div id="loginSignupCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="image1.jpg" class="carousel-image" alt="Image 1">
-        </div>
-        <div class="carousel-item">
-            <img src="image2.jpg" class="carousel-image" alt="Image 2">
-        </div>
-        <div class="carousel-item">
-            <img src="image3.jpg" class="carousel-image" alt="Image 3">
-        </div>
-        <div class="carousel-item">
-            <img src="image4.jpg" class="carousel-image" alt="Image 4">
-        </div>
-        <div class="carousel-item">
-            <img src="image5.jpg" class="carousel-image" alt="Image 5">
-        </div>
+    <div class="col-md-4">
+        <label for="dateRange" class="form-label">Select Date Range:</label>
+        <input type="text" id="dateRange" class="form-control">
     </div>
-    <div class="carousel-controls">
-        <button class="btn" onclick="location.href='login.html'">Login</button>
-        <button class="btn" onclick="location.href='signup.html'">Signup</button>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#loginSignupCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#loginSignupCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
+
+    <div class="col-md-4">
+        <label for="timeFrame" class="form-label">Time Frame:</label>
+        <select id="timeFrame" class="form-select">
+            <option value="day">Day</option>
+            <option value="month">Month</option>
+            <option value="year">Year</option>
+        </select>
+    </div>    
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const dateRangePicker = document.getElementById('dateRange');
+        const timeFrameSelect = document.getElementById('timeFrame');
+
+        const updateDatePicker = () => {
+            if (!dateRangePicker) return; // Prevent errors if the element is missing
+            const selectedTimeFrame = timeFrameSelect.value;
+
+            flatpickr(dateRangePicker, {
+                mode: 'range',
+                dateFormat: selectedTimeFrame === 'day' ? 'Y-m-d' :
+                            selectedTimeFrame === 'month' ? 'Y-m' :
+                            'Y',
+                enableTime: false
+            });
+        };
+
+        // Update the date picker when the time frame changes
+        timeFrameSelect.addEventListener('change', updateDatePicker);
+
+        // Initialize with the default value
+        updateDatePicker();
+
+        document.getElementById('filterButton').addEventListener('click', async () => {
+        const dateRange = dateRangePicker.value.split(' to ');
+        const viewMode = document.getElementById('viewMode').value;
+        const timeFrame = timeFrameSelect.value;
+        let [startDate, endDate] = dateRange;
+
+        if (!startDate || !endDate) {
+            alert('Please select a valid date range.');
+            return;
+        }
+
+        console.log(`Filtering data by: ${timeFrame}, Start: ${startDate}, End: ${endDate}`);
+
+        // Fetch data based on selected time frame
+        const data = await fetchChartData(viewMode, startDate, endDate, timeFrame);
+        updateChart(data, viewMode, startDate, endDate, timeFrame);
+        });
+
+        const fetchChartData = async (viewMode, startDate, endDate, timeFrame) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/reports', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ viewMode, startDate, endDate, timeFrame }),
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching chart data:', error);
+            return [];
+        }
+    };
+
+    });
+
+</script>
 
 <script src="../../bootstrap/js/bootstrap.js"></script>
 </body>

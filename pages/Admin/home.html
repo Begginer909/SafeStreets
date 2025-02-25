@@ -183,9 +183,20 @@
                             <div class="invalid-feedback">Please provide a valid last name.</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="crimeType" class="form-label">Crime Type</label>
-                            <input type="text" id="crimeType" class="form-control" required minlength="3" maxlength="100">
-                            <div class="invalid-feedback">Please provide a crime type.</div>
+                        <label for="crime-type" class="form-label">Type of Crime:</label>
+                        <select id="crimeType" name="crime-type" class="form-select" required>
+                            <option value="flytipping">Fly tipping</option>
+                            <option value="sexual_assault">Sexual Assault</option>
+                            <option value="violent">Violent</option>
+                            <option value="petty">Petty</option>
+                            <option value="drug_offences">Drug offences</option>
+                            <option value="murder">Murder</option>
+                            <option value="prostitution">Prostitution</option>
+                            <option value="theft">Theft</option>
+                            <option value="drunk_driving">Drunk Driving</option>
+                            <option value="robbery">Robbery</option>
+                            <option value="other">Other</option>
+                        </select>
                         </div>
                         <div class="col-md-6">
                             <label for="street" class="form-label">Street</label>

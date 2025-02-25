@@ -35,7 +35,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="createReport.html">Create Report</a>
+                        <a class="nav-link" style="color: #DAA520;" href="createReport.html">Create Report</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -65,7 +65,7 @@
 
                     <div class="mb-3">
                         <label for="crime-type" class="form-label">Type of Crime:</label>
-                        <select id="crime-type" name="crime-type" class="form-select" required>
+                        <select id="crime-type" name="crimeType" class="form-select" required>
                             <option value="">Select a crime type</option>
                             <option value="flytipping">Fly tipping</option>
                             <option value="sexual_assault">Sexual Assault</option>
@@ -101,11 +101,14 @@
                         <input type="text" id="street" name="street" class="form-control">
                     </div>
 
-                    <button class="mb-3" type="button" id="getLocation">Get location</button>
+                    <button class="mb-3" type="button" id="getLocation">Get location</button> <br>
 
                     <input type="hidden" id="accID" name="accID">
+                    
+                    <label for="image">Upload Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" capture="camera" required>
 
-                    <div class="text-center">
+                    <div class="text-center my-3">
                         <button type="button" id="submitButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Submit Report</button>
                     </div>
 

@@ -66,4 +66,26 @@
   color: red; /* Optional hover effect */
 }
 
+.image-container img {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+  transform: scale(1.05);
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Improve spacing between sections */
+.image-container, #map1 {
+  margin-bottom: 20px;
+}
+
+
   

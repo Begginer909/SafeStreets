@@ -4,16 +4,13 @@
   const ctx = document.getElementById('crimeChart').getContext('2d');
   let chart;
 
-  // Initialize Flatpickr
-  flatpickr('#dateRange', { mode: 'range', dateFormat: 'Y-m-d' });
-
       // Fetch and update chart data
-      const fetchChartData = async ( viewMode, startDate, endDate) => {
+      const fetchChartData = async ( viewMode, timeFrame, startDate, endDate) => {
         try {
           const response = await fetch('http://localhost:3000/api/reports', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ viewMode, startDate, endDate }),
+            body: JSON.stringify({ viewMode, timeFrame, startDate, endDate }),
           });
           return await response.json();
         } catch (error) {
@@ -22,7 +19,7 @@
         }
       };
       
-const updateChart = (data, viewMode, startDate, endDate) => {
+const updateChart = (data, viewMode, timeFrame) => {
       if (!data.length) {
         alert('No data available for the selected range.');
         return;
@@ -44,39 +41,53 @@ const updateChart = (data, viewMode, startDate, endDate) => {
       
         // Format data and generate datasets for Chart.js
         const labels = [...new Set(data.map(item => item.date))]; // Unique dates
-        const circleIDs = [...new Set(data.map(item => item.circleID))]; // Unique circle IDs
+        const filteredData = data.filter(item => item.area !== 0);
+        const circleIDs = [...new Set(filteredData.map(item => item.area))]; // Unique circle IDs
         const datasets = [];
         const threshold = 40; // Initialize threshold value 
       
         if (viewMode === 'totalReports') {
-          // Create a dataset for each circleID
-          circleIDs.forEach(circleID => {
-            const datasetData = labels.map(date => {
-              const entry = data.find(item => item.date === date && item.circleID === circleID);
-              return entry ? entry.count : 0; // Count for this date and circleID
+
+          if(timeFrame == 'year'){
+
+          }
+          else if(timeFrame == 'month'){
+
+          }
+          else{
+              // Create a dataset for each circleID
+              circleIDs.forEach(circleID => {
+                const datasetData = labels.map(date => {
+                  const entry = data.find(item => item.date === date && item.area === circleID);
+                  return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+                });
+
+                console.log("DataSetData: " + datasetData);
+
+              // Calculate total count for this circleID
+              const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
+
+              console.log("Total Count: " + totalCount);
+
+              // Calculate percentage based on the threshold
+              const percentageData = datasetData.map(count => {
+                return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+              });
+
+              datasets.push({
+                label: `Area: ${circleID}`,
+                data: percentageData,
+                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                borderWidth: 1,
+                counts: datasetData, // Set counts for later use
+                totalCount 
+              });
             });
+              // Sort datasets based on totalCount in descending order
+              datasets.sort((a, b) => b.totalCount - a.totalCount);
+          }
 
-            // Calculate total count for this circleID
-            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
-
-            // Calculate percentage based on the threshold
-            const percentageData = datasetData.map(count => {
-              return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
-            });
-
-            datasets.push({
-              label: `Area: ${circleID}`,
-              data: percentageData,
-              backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
-              borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
-              borderWidth: 1,
-              counts: datasetData, // Set counts for later use
-              totalCount 
-            });
-          });
-
-          // Sort datasets based on totalCount in descending order
-          datasets.sort((a, b) => b.totalCount - a.totalCount);
 
           // Check if datasets are created correctly
           console.log("Datasets:", datasets);
@@ -89,6 +100,7 @@ const updateChart = (data, viewMode, startDate, endDate) => {
               const entry = data.find(item => item.date === date && item.crimeType === crimeType);
               return entry ? entry.count : 0; // Count for this date and crimeType
             });
+            console.log(counts);
 
             // Calculate total count for this crime type
             const totalCount = counts.reduce((sum, count) => sum + count, 0);
@@ -140,7 +152,7 @@ const updateChart = (data, viewMode, startDate, endDate) => {
       
         // Create the chart
         chart = new Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
             labels, // Use `labels` directly here
             datasets,
@@ -153,15 +165,19 @@ const updateChart = (data, viewMode, startDate, endDate) => {
                 maxRotation: 90,
                 minRotation: 45,
                 ticks:{
-                  callback: function(value, index, values) {
-                    // Check if the corresponding data value is zero
+                  callback: function (value, index, values) {
                     const dataset = this.chart.data.datasets;
                     const hasValue = dataset.some(ds => ds.data[index] > 0);
-                    return hasValue ? value : ''; // Return label or empty string
+                    if (!hasValue) return '';
+        
+                    // Format X-axis labels based on selected timeframe
+                    const date = labels[index];
+                    if (timeFrame === 'day') return formatDate(date, 'MM-DD-YY');
+                    if (timeFrame === 'month') return formatDate(date, 'MM-YY');
+                    if (timeFrame === 'year') return formatDate(date, 'YY');
+                    return date; // Fallback to default
                   }
                 },
-                barThickness: 50,
-                barPercentage: 0.5,
               },
               y: {
                   beginAtZero: true,
@@ -174,15 +190,39 @@ const updateChart = (data, viewMode, startDate, endDate) => {
             plugins: {
               tooltip: {
                 callbacks: {
+                  title: function (tooltipItems) {
+                    // Get the date from the tooltip label
+                    const rawDate = tooltipItems[0].label;
+              
+                    // Format the date properly
+                    return formatDate(rawDate, 'MM-DD-YY'); 
+                  },
                   label: function (tooltipItem) {
                     const dataset = tooltipItem.dataset;
                     const percentage = tooltipItem.raw; // Percentage value
                     const count = dataset.counts[tooltipItem.dataIndex]; // Raw count
+                    const area = dataset.label.split(': ')[1]; // Extract Area ID
                     
                     if(viewMode == "totalReports"){
+
+                      // Find all crimes reported in this area
+                      const crimesInArea = data
+                      .filter(item => item.area == area) // Match area
+                      .reduce((acc, item) => {
+                        acc[item.crimeType] = (acc[item.crimeType] || 0) + item.totalReportType;
+                        return acc;
+                      }, {});
+
+                    // Format crime report summary
+                    const crimeReportList = Object.entries(crimesInArea)
+                      .map(([crimeType, crimeCount]) => `${capitalize(crimeType)}: ${crimeCount}`)
+                      .join(", ");
+
                       return [
+                        `Area: ${area}`,
                         `Report Count: ${count}`,
                         `Percentage: ${percentage}%`,
+                        `Crime Reports: ${crimeReportList}`,
                       ];
                     }
                     else if(viewMode == "totalCategory"){
@@ -241,22 +281,65 @@ const updateChart = (data, viewMode, startDate, endDate) => {
             },
           },
         });
-};
-      
-    
-document.getElementById('filterButton').addEventListener('click', async () => {
-    const dateRange = document.getElementById('dateRange').value.split(' to ');
-    const viewMode = document.getElementById('viewMode').value;
-    const [startDate, endDate] = dateRange;
 
-    if (startDate && endDate) {
-      const data = await fetchChartData(viewMode, startDate, endDate);
-      updateChart(data, viewMode, startDate, endDate);
-      console.log("Data: " + data);
-    } else {
-        alert('Please select a valid date range.');
-      }
+  // Function to format date dynamically
+  function formatDate(date, format) {
+    const d = new Date(date);
+    const yy = String(d.getFullYear()).slice(-2); // Last 2 digits of year
+    const mm = String(d.getMonth() + 1).padStart(2, '0'); // Month (01-12)
+    const dd = String(d.getDate()).padStart(2, '0'); // Day (01-31)
+
+    if (format === 'MM-DD-YY') return `${mm}-${dd}-${yy}`;
+    if (format === 'MM-YY') return `${mm}-${yy}`;
+    if (format === 'YY') return `${yy}`;
+    return date; // Default case
+  }
+
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const dateRangePicker = document.getElementById('dateRange');
+    const timeFrameSelect = document.getElementById('timeFrame');
+
+    const updateDatePicker = () => {
+      if (!dateRangePicker) return; // Prevent errors if the element is missing
+      const selectedTimeFrame = timeFrameSelect.value;
+
+      flatpickr(dateRangePicker, {
+          mode: 'range',
+          dateFormat: selectedTimeFrame === 'day' ? 'Y-m-d' :
+                      selectedTimeFrame === 'month' ? 'Y-m' :
+                      'Y',
+          enableTime: false
+      });
+  };
+
+  // Update the date picker when the time frame changes
+  timeFrameSelect.addEventListener('change', updateDatePicker);
+
+  // Initialize with the default value
+  updateDatePicker();
+
+  document.getElementById('filterButton').addEventListener('click', async () => {
+  const dateRange = dateRangePicker.value.split(' to ');
+  const viewMode = document.getElementById('viewMode').value;
+  const timeFrame = timeFrameSelect.value;
+  let [startDate, endDate] = dateRange;
+
+  if (startDate && endDate) {
+    const data = await fetchChartData(viewMode, timeFrame, startDate, endDate);
+    updateChart(data, viewMode, timeFrame);
+    console.log("Data: " + data);
+  } else {
+      alert('Please select a valid date range.');
+    }
+
+  console.log(`Filtering data by: ${timeFrame}, Start: ${startDate}, End: ${endDate}`);
+  });
+
 });
+
 
 
     
