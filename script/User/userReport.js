@@ -99,30 +99,19 @@ document.getElementById('getLocation').addEventListener('click', getStreet);
 document.getElementById('crime-report-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const lat = document.getElementById('latitude').value;
-    const long = document.getElementById('longitude').value;
-    const street = document.getElementById('street').value; // Retrieve street from the DOM (or from a global variable)
-
-    const data = {
-        accID: document.getElementById('accID').value,
-        name: document.getElementById('name').value,
-        contact: document.getElementById('contact').value,
-        crimeType: document.getElementById('crime-type').value,
-        description: document.getElementById('describeID').value,
-        latitude: lat,
-        longitude: long,
-        street: street,
-    };
+    const form = document.getElementById('crime-report-form');
+    const formData = new FormData(form);
 
     try {
         const response = await fetch('http://localhost:3000/notifications', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: formData,
         });
 
+        const data = await response.json();
+
         if (response.ok) {
-            alert('Crime report submitted successfully!');
+            alert('Crime report submitted successfully!', data.imageUrl);
             
             // Close the modal programmatically
             const modalElement = document.getElementById('staticBackdrop');
@@ -131,6 +120,7 @@ document.getElementById('crime-report-form').addEventListener('submit', async (e
 
             document.getElementById('crime-type').value = "";
             document.getElementById('describeID').value = "";
+            document.getElementById('image').value = "";
 
             // Optionally, fetch the location again for updated latitude and longitude
             getLocation();

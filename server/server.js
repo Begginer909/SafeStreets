@@ -7,6 +7,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { Server } = require('socket.io');
 const cors = require('cors');
 
@@ -302,26 +305,50 @@ app.put('/updateAccount/:id', async (req, res) => {
   }
 });
 
-app.post('/notifications', (req, res) => {
-  const { accID, crimeType, description, latitude, longitude, street } = req.body;
+// Multer Storage Configuration
+const storage = multer.memoryStorage();
 
-  if (!accID || !crimeType || !latitude || !longitude) {
+const upload = multer({ storage });
+
+app.post('/notifications', upload.single('image'), (req, res) => {
+
+  const { accID, crimeType, description, latitude, longitude, street} = req.body;
+
+  if (!accID || !crimeType || !latitude || !longitude || !street) {
     return res.status(400).json({ message: 'Missing required fields.' });
   }
 
+  if (!req.file) {
+    return res.status(400).json({ error: 'Image is required' });
+  }
+
+  // Image file name (but not saved yet)
+  const imageName = Date.now() + path.extname(req.file.originalname);
+  const imagePath = `uploads/${imageName}`; // Path to save the file
+  const imageSrc = `${imageName}`;
+
+
   const query = `
-    INSERT INTO tblNotification (accID, crimeType, description, latitude, longitude, street)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO tblnotification (accID, crimeType, description, latitude, longitude, street, imagePath)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(query, [accID, crimeType, description, latitude, longitude, street], (err) => {
+  db.query(query, [accID, crimeType, description, latitude, longitude, street, imageSrc], (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ message: 'Error saving notification.' });
     }
 
-    io.emit('new_notification'); // Notify staff in real-time
-    res.status(200).json({ message: 'Notification added successfully.' });
+    // Database Insertion Success - Now Save the Image**
+    fs.writeFile(imagePath, req.file.buffer, (fsErr) => {
+      if (fsErr) {
+          console.error('Error saving image:', fsErr);
+          return res.status(500).json({ message: 'Error saving image.' });
+      }
+
+      io.emit('new_notification'); // Notify staff in real-time
+      res.status(200).json({ message: 'Notification added successfully.', reportID: result.insertId, imagePath });
+    });
   });
 });
 
@@ -506,13 +533,40 @@ app.post('/notifications/send', (req, res) => {
 app.post('/notifications/delete', (req, res) => {
   const { notificationID } = req.body;
 
-  const query = `DELETE FROM tblnotification WHERE notificationID = ?`;
-  db.query(query, [notificationID], (err, result) => {
+  // Step 1: Fetch the image path
+  const getImageQuery = `SELECT imagePath FROM tblnotification WHERE notificationID = ?`;
+
+  db.query(getImageQuery, [notificationID], (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error deleting notification.' });
+      console.error('Error fetching image:', err);
+      return res.status(500).json({ message: 'Error fetching image path.' });
     }
-    res.json({ message: 'Notification deleted successfully.' });
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Notification not found.' });
+    }
+
+    const imagePath = path.join(__dirname, '../uploads', results[0].imagePath); // Correct path
+
+    // Step 2: Delete the record from the database
+    const deleteQuery = `DELETE FROM tblnotification WHERE notificationID = ?`;
+
+    db.query(deleteQuery, [notificationID], (deleteErr) => {
+      if (deleteErr) {
+        console.error('Error deleting notification:', deleteErr);
+        return res.status(500).json({ message: 'Error deleting notification.' });
+      }
+
+      // Step 3: Delete the image file
+      fs.unlink(imagePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Error deleting image file:', unlinkErr);
+          // Not critical, so still send success response
+        }
+
+        res.status(200).json({ message: 'Notification and image deleted successfully.' });
+      });
+    });
   });
 });
 
@@ -593,7 +647,7 @@ function verifyRole(role) {
 
 
 // Admin-only route
-app.get('/admin/dashboard', verifyRole('Admin'), (req, res) => {
+app.get('/admin/home', verifyRole('Admin'), (req, res) => {
   res.json({ message: 'Welcome Admin' });
 });
 
@@ -722,7 +776,7 @@ function emitCircleData() {
 }
 
 app.post('/api/reports', (req, res) => {
-  const { viewMode, startDate, endDate } = req.body;
+  const { viewMode, timeFrame, startDate, endDate } = req.body;
 
   const newStartDate = `${startDate} 00:00:00`;
   const newEndDate = `${endDate} 23:59:59`;
@@ -731,16 +785,51 @@ app.post('/api/reports', (req, res) => {
   let params = [newStartDate, newEndDate];
 
   if (viewMode === 'totalReports') {
-    query = `
-      SELECT 
-        DATE_FORMAT(createdAt, '%Y-%m-%d') as date,
-        circleID,
-        COUNT(*) as count
-      FROM tblreport 
-      WHERE createdAt BETWEEN ? AND ? AND circleID != 0
-      GROUP BY date, circleID
-      ORDER BY date, circleID
-    `;
+    if(timeFrame === 'year'){
+      query = `
+        SELECT 
+          YEAR(createdAt) AS report_year,
+          circleID AS area,
+          crimeType,
+          COUNT(*) AS total_reports_per_type,
+          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt), circleID) AS total_reports_per_area,
+          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt)) AS total_reports_per_year
+        FROM tblreport
+        WHERE YEAR(createdAt) BETWEEN ? AND ?
+        GROUP BY YEAR(createdAt), circleID, crimeType
+        ORDER BY report_year ASC, area ASC, total_reports_per_type DESC;
+        `;
+    }
+    else if(timeFrame === 'month'){
+      query = `
+        SELECT 
+          DATE_FORMAT(createdAt, '%m') AS report_month,
+          circleID AS area,
+          crimeType,
+          COUNT(*) AS total_reports_per_type,
+          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt), circleID) AS total_reports_per_area,
+          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt)) AS total_reports_per_month
+        FROM tblreport
+        WHERE createdAt BETWEEN ? AND ? 
+        GROUP BY MONTH(createdAt), circleID, crimeType
+        ORDER BY report_month ASC, area ASC, total_reports_per_type DESC
+        `;
+    }
+    else{
+      query = `
+        SELECT 
+          DATE(createdAt) AS date,
+          circleID AS area,
+          crimeType,
+          COUNT(*) AS totalReportType,
+          SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt), circleID) AS totalReportArea,
+          SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt)) AS totalReportDay
+        FROM tblreport
+        WHERE createdAt BETWEEN ? AND ?
+        GROUP BY DATE(createdAt), area, crimeType
+        ORDER BY date ASC, area ASC, totalReportType DESC
+        `;
+    }
   } else if (viewMode === 'totalCategory') {
     query = `
       SELECT 
@@ -901,6 +990,9 @@ io.on('connection', (socket) => {
     console.log('A user disconnected:', socket.id);
   });
 });
+
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Start the server
 const PORT = 3000;

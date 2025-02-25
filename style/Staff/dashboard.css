@@ -22,7 +22,6 @@ body {
 }
 
 .card:hover {
-    transform: scale(1.05); /* Scale effect on hover */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
 }
 

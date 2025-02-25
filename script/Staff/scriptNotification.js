@@ -37,6 +37,7 @@ document.getElementById('notification-card').addEventListener('click', async () 
                 <td>${notification.crimeType}</td>
                 <td>${notification.description}</td>
                 <td>${notification.street}</td>
+                <td>${notification.imagePath}</td>
                 <td class="action-buttons">
                     <button class="btn btn-primary btn-view" data-id="${notification.notificationID}">View</button>
                     <button class="btn btn-success btn-send" data-id="${notification.notificationID}">Send</button>
@@ -46,6 +47,11 @@ document.getElementById('notification-card').addEventListener('click', async () 
         `;
         tbody.innerHTML += row;
     });
+});
+
+document.getElementById("crimeImage").addEventListener("click", function() {
+    const newTab = window.open();
+    newTab.document.write(`<img src="${this.src}" style="width:100%">`);
 });
 
 // Map and modal interaction
@@ -62,7 +68,7 @@ var modal = document.getElementById("myModal");
 const closeButton = document.querySelector('.custom-close');
 
 // Function to open the modal and initialize the map
-function openModal(latitude, longitude, crimeType, description ) {
+function openModal(latitude, longitude, crimeType, description) {
     modal.style.display = "block";
 
     // Use a timeout to ensure the modal is fully rendered
@@ -103,7 +109,6 @@ window.onclick = function(event) {
 document.addEventListener('click', async (e) => {
     if (e.target.classList.contains('btn-view')) {
         const notificationID = e.target.dataset.id;
-        console.log(notificationID);
 
         // Fetch notification data
         const response = await fetch('http://localhost:3000/notifications/view', {
@@ -116,6 +121,13 @@ document.addEventListener('click', async (e) => {
 
         // Hide modal
         modalElement.hide();
+
+        if (data.imagePath) {
+            document.getElementById('crimeImage').src = `http://localhost:3000/uploads/${data.imagePath}`;
+            console.log(data.imagePath);
+        } else {
+            console.log("No image found.");
+        }
 
         // Clear previous map instance
         if (map1) {

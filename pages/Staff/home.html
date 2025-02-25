@@ -149,13 +149,14 @@
             <div class="modal-body">
                 <table id="notification-table" class="table table-bordered table-hover table-responsive">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>Account ID</th>
                             <th>Witness Name</th>
                             <th>Contact</th>
                             <th>Type of Crime</th>
                             <th>Description</th>
                             <th>Location</th>
+                            <th>Image Path</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -231,7 +232,12 @@
         <div class="modal-content">
             <!-- Close button styled and positioned to the top-right -->
             <button type="button" class="custom-close" aria-label="Close">&times;</button>
-            <div id="map1" style="height: 400px; width: 100%;"></div>
+            <div class="text-center">
+                <h1 class="py-2">Crime Image<hr></h1>
+                <img id="crimeImage" src="" alt="Crime Image" height="300" width="600"><br>   
+                <h1 class="mt-4 py-2">Location of Report<hr></h1>
+                <div id="map1" style="height: 400px; width: 100%;"></div>
+            </div>
         </div>
     </div>
 </div>
