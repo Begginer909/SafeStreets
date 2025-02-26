@@ -19,7 +19,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_ORIGIN, // Front-end origin
-    methods: ['GET', 'POST'], // Allowed methods
+    methods: ['GET', 'POST', 'GET'], // Allowed methods
     credentials: true, // Allow cookies or authentication headers,
   }
 });
