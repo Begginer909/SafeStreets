@@ -18,7 +18,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: [process.env.CLIENT_ORIGIN, 'http://127.0.0.1:5500'], // Front-end origin
+    origin: process.env.CLIENT_ORIGIN, // Front-end origin
     methods: ['GET', 'POST'], // Allowed methods
     credentials: true, // Allow cookies or authentication headers,
   }
@@ -41,7 +41,8 @@ const db = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
+  reconnect: true
 });
 
 db.connect((err) => {
@@ -53,7 +54,15 @@ db.connect((err) => {
   console.log("DB_NAME:", process.env.DB_NAME);
 });
 
-// Separate Login Endpoint by Roletaskkill /PID 5692 /F 
+db.on('error', function(err) {
+  console.log('Database error:', err);
+  if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+      console.log('Reconnecting...');
+      db.connect();
+  }
+});
+
+// Separate Login Endpoint by Role
 app.post('/login/:role', async (req, res) => {
   const { role } = req.params; // Get role from the route
   const { username, password } = req.body;
@@ -108,7 +117,7 @@ app.post('/login/:role', async (req, res) => {
 
     res.cookie('auth_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 3600000,
     });
 
