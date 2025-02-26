@@ -217,7 +217,7 @@ app.post('/register', async (req, res) => {
   db.query(profileSql, [firstName, lastName, contact, birthdate, gender], (err, profileResult) => {
     if (err) {
       console.error('Error inserting into tbl_information:', err);
-      return res.status(500).json({ error: 'Failed to save user profile.' });
+      return res.status(500).json({ error: 'Failed to save user profile.', details: err.message });
     }
 
     const userId = profileResult.insertId; // Get generated user_id from tbl_information
