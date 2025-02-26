@@ -996,6 +996,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Start the server
 const PORT = 3000;
-server.listen(process.env.CLIENT_ORIGIN || PORT, () => {
+server.listen(process.env.PORT || PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
