@@ -42,7 +42,7 @@ map.setMaxBounds(bounds);
 
 
 // Connect to the Socket.IO server
-const socketUser = io('http://localhost:3000');
+const socketUser = io('https://safestreets-production.up.railway.app');
 
 // Function to get URL parameters
 function getUrlParams() {

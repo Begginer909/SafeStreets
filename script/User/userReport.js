@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('http://localhost:3000/protected', {
+        const response = await fetch('https://safestreets-production.up.railway.app/protected', {
         method: 'GET',
         credentials: 'include', // Include cookies in the request
         });
@@ -103,7 +103,7 @@ document.getElementById('crime-report-form').addEventListener('submit', async (e
     const formData = new FormData(form);
 
     try {
-        const response = await fetch('http://localhost:3000/notifications', {
+        const response = await fetch('https://safestreets-production.up.railway.app/notifications', {
             method: 'POST',
             body: formData,
         });

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault(); // Prevent the default anchor click behavior
 
         // Fetch data from the server
-        fetch('http://localhost:3000/api/crime-reports') // Adjust the endpoint as necessary
+        fetch('https://safestreets-production.up.railway.app/api/crime-reports') // Adjust the endpoint as necessary
             .then(response => response.json())
             .then(data => {
                 populateTable(data); // Populate the table with initial data
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function fetchDataAndPopulateTable(){
         
         // Fetch data from the server
-        fetch('http://localhost:3000/api/crime-reports') // Adjust the endpoint as necessary
+        fetch('https://safestreets-production.up.railway.app/api/crime-reports') // Adjust the endpoint as necessary
         .then(response => response.json())
         .then(data => {
             populateTable(data); // Populate the table with initial data
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 source: report.source,
             };
             // Make a PUT request to update the report
-            fetch(`http://localhost:3000/api/crime-reports-update/${updatedReport.reportID}`, {
+            fetch(`https://safestreets-production.up.railway.app/api/crime-reports-update/${updatedReport.reportID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const source = report.source; // Get the source of the report
     
             // Make a DELETE request to your server to delete the report
-            fetch(`http://localhost:3000/api/crime-reports/${reportID}`, {
+            fetch(`https://safestreets-production.up.railway.app/api/crime-reports/${reportID}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

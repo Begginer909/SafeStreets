@@ -68,7 +68,7 @@ const leafletCircles = circles.map(circle => {
 
 
 // Connect to the Socket.IO server
-const socketStaff = io('http://localhost:3000');
+const socketStaff = io('https://safestreets-production.up.railway.app');
 
   // Listen for the 'circle-data' event from the server
 socketStaff.on('circle-data', (data) => {

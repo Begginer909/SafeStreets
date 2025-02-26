@@ -1,5 +1,5 @@
 // Fetch data from the backend API
-fetch('http://localhost:3000/userAccount/User')
+fetch('https://safestreets-production.up.railway.app/userAccount/User')
 .then(response => response.json())
 .then(data => {
     const tableBody = document.getElementById('taskTable').querySelector('tbody');
@@ -65,7 +65,7 @@ if (password) {
 }
 
 try {
-    const response = await fetch(`http://localhost:3000/updateAccount/${id}`, {
+    const response = await fetch(`https://safestreets-production.up.railway.app/updateAccount/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ try {
     function deleteTask(id) {
         if (confirm(`Are you sure you want to delete Task ID ${id}?`)) {
         // Send DELETE request to server
-        fetch(`http://localhost:3000/delete/${id}`, { method: 'DELETE' })  // Use DELETE method
+        fetch(`https://safestreets-production.up.railway.app/delete/${id}`, { method: 'DELETE' })  // Use DELETE method
         .then(response => response.json())
         .then(result => {
             alert(result.message); // Show success message from backend

@@ -88,7 +88,7 @@ if (!/^\d{11}$/.test(formData.contact)) {
 
 // Validate username
 try {
-    const usernameCheckResponse = await fetch(`http://localhost:3000/check-username?username=${formData.username}`);
+    const usernameCheckResponse = await fetch(`https://safestreets-production.up.railway.app/check-username?username=${formData.username}`);
     const usernameCheckResult = await usernameCheckResponse.json();
 
     if (usernameCheckResult.exists) {
@@ -103,7 +103,7 @@ try {
 
 try {
     // Send data to the backend
-    const response = await fetch('http://localhost:3000/register', {
+    const response = await fetch('https://safestreets-production.up.railway.app/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData), 

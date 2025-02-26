@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const response = await fetch('http://localhost:3000/protected', {
+        const response = await fetch('https://safestreets-production.up.railway.app/protected', {
             method: 'GET',
             credentials: 'include',
         });
@@ -43,7 +43,7 @@ document.getElementById('createReportForm').addEventListener('submit', async (e)
     };
 
     try {
-        const response = await fetch('http://localhost:3000/staff/createReport', {
+        const response = await fetch('https://safestreets-production.up.railway.app/staff/createReport', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
