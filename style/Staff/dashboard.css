@@ -1,0 +1,126 @@
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#content {
+    margin-left: 250px; /* Leave space for the sidebar */
+    padding: 20px;
+    background-color: #ecf0f1;
+    flex-grow: 1; /* Allow content to grow */
+    overflow-y: auto; /* Scroll if content overflows */
+}
+.card {
+    background: linear-gradient(135deg, #1abc9c, #16a085); /* Gradient background */
+    border: 1px solid #16a085; /* Slightly darker teal border for contrast */
+    border-radius: 10px; /* Rounded corners */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition */
+    position: relative; /* For badge positioning */
+    color: white; /* White text for better contrast */
+}
+
+.card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Larger title */
+    font-weight: bold; /* Bold title */
+    color: white; /* White color for titles */
+}
+
+.card-text {
+    color: rgba(255, 255, 255, 0.8); /* Muted white text color for description */
+}
+
+.badge {
+    font-size: 1rem; /* Adjust badge size */
+    position: absolute; /* Position badge */
+    top: 10px; /* Adjust position */
+    right: 10px; /* Adjust position */
+    background-color: #dc3545; /* Red background for notifications */
+    color: white; /* White text for badge */
+}
+
+.card i {
+    color: white; /* White color for icons */
+}
+@media (max-width: 768px) {
+    #content {
+        margin-left: 0; /* No margin on small screens */
+    }
+}
+
+/* Add this CSS to your existing styles */
+.table td {
+    vertical-align: middle; /* Center align the content vertically */
+}
+
+.table .action-buttons {
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: flex-start; /* Align buttons to the start */
+    align-items: center; /* Center buttons vertically */
+}
+
+.table .btn {
+    margin-right: 5px; /* Add some space between buttons */
+}
+
+.modal-body {
+    padding: 20px; /* Add padding to the modal body */
+}
+
+.table th, .table td {
+    vertical-align: middle; /* Center align text vertically */
+}
+
+.table-striped tbody tr:hover {
+    background-color: #f1f1f1; /* Light gray background on hover */
+}
+
+.table th {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text for headers */
+}
+
+.table td {
+    text-align: left; /* Left align text in table cells */
+}
+
+.modal-body {
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+.modal-content {
+    width: 100%; /* Ensure modal content takes full width */
+}
+
+.table {
+    width: 100%; /* Ensure table takes full width */
+    max-width: 100%; /* Prevent exceeding modal width */
+}
+
+.scrollable-table {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.carousel-container {
+    width: 80%; /* Set the desired width */
+    height: auto;
+    max-width: 800px; /* Set a maximum width */
+    margin: auto; /* Center the carousel */
+}
+
+.carousel-item {
+    height: 500px; /* Fixed height */
+    overflow: hidden; /* Hide overflow */
+}
+
+.carousel-item img {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    object-fit: cover; /* Cover the container while maintaining aspect ratio */
+}

@@ -1,0 +1,41 @@
+body {
+    background-color: #2C3E50; /* Dark Blue */
+}
+
+.container-form {
+    background-color: #ECF0F1; /* Light Gray for the form */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    min-width: 320px; /* Minimum width for small screens */
+}
+
+.form-control {
+    background-color: #FFFFFF; /* White for input fields */
+    color: #34495E; /* Dark Gray text */
+}
+
+.form-label {
+    color: #7F8C8D; /* Medium Gray for labels */
+}
+
+.btn-custom {
+    background-color: blue; /* Red for the button */
+    color: #FFFFFF; /* White text */
+}
+
+.btn-custom:hover {
+    background-color: #4962f2; /* Blue for the button */
+    color: #FFFFFF; /* White text */
+    font-weight: bold;
+}
+
+.text-dark {
+    color: #34495E !important; /* Ensure dark text for headings */
+}
+
+@media (min-width: 768px) {
+    .container-form {
+        max-width: 600px; /* Adjust max width for larger screens */
+    }
+}

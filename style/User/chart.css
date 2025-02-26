@@ -1,0 +1,72 @@
+/* Dynamic width adjustment for the chart container */
+body {
+    background-color: #f8f9fa; /* Light background for contrast */
+}
+
+.container-fluid{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Title Styles */
+h1 {
+    font-size: 2.5em; /* Larger font size for the title */
+    color: #2C3E50; /* Dark color for the title */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+/* Card Styles */
+.card {
+    border: 1px solid #dee2e6; /* Light border for cards */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Filter Section Styles */
+.form-label {
+    font-weight: bold; /* Bold labels for better visibility */
+}
+
+.form-select {
+    border-radius: 5px; /* Rounded corners for select */
+    border: 1px solid #ced4da; /* Light border */
+}
+
+.btn-primary {
+    background-color: #2C3E50; /* Dark background for buttons */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for button */
+    font-size: 1em; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Button Hover Effect */
+.btn-primary:hover {
+    background-color: #DAA520; /* Change color on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em; /* Smaller title on mobile */
+    }
+    .btn-primary {
+        width: 100%; /* Full width buttons on mobile */
+        margin-top: 10px; /* Margin for spacing */
+    }
+}
+
+#chartContainer {
+    overflow-x: auto; /* Enable horizontal scrolling only within this container */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    white-space: nowrap; /* Prevent elements from wrapping */
+    max-width: 100%; /* Ensure container does not exceed its parent width */
+    
+}
+  
+canvas {
+    display: block;
+    max-width: none; /* Allow canvas to exceed the container width */
+    position: relative;
+}

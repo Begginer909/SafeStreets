@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../style/styleAdmin.css">
+        <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous"></script>
+
+        <style>
+            .navBar a{
+                height: 90px;
+                background-color: lightgrey;
+                border: 1px solid black;
+                text-align: center;
+                padding-top: 30px;
+                color: black;
+                text-decoration: none;
+                font-size: large;
+            }
+        </style>
+
+    </head>
+<body>
+
+    <div class="container-fluid">  
+    
+        <div class="row mx-2 mt-3 border border-dark">
+            <div class="col-2 border border-black" style="width: 25%; background-color: #2C3E50;">
+                <div>
+                    <h1 class="mt-5 text-center">Dashboard</h1>
+                    <hr>
+                    <div class="navBar">
+                        <a type="button" href ="adminAccount.html" class="text-center mt-4 w-100">User Account</button>
+                        <a type="button" href="#" class= "my-3 w-100">Staff Account</a>
+                        <a type="button" href="createStaffAccount.html" class ="mb-3 w-100" style="background-color: #1abc9c;">Create Staff Account</a>
+                        <a type="button" href ="home.html" class="mb-4 w-100">Back</a>
+                    </div>
+                </div>  
+            </div>
+            <div class="col-8 ms-5">
+                <h1 class="text-center pt-3 mb-5">STAFF REGISTRATION</h1>
+                
+                    <form id="staffRegistrationForm">
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" 
+                                required pattern="[A-Za-z\s]+" minlength="3" title="Please enter a valid name (letters only, at least 3 characters).">
+                            </div>
+                    
+                            <div class="col-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name"
+                                 pattern="[A-Za-z\s]+" minlength="3" title="Please enter a valid name (letters only, at least 3 characters)." required>
+                            </div>
+                
+                        <div class="col-6 mb-3">
+                            <label for="contact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter contact number" 
+                            pattern="^09[0-9]{9}$" title="Please enter a valid number starting with 09 and 11 digits long." required>
+                        </div>
+                
+                        <div class="col-6 mb-3">
+                            <div class="row">
+                                <label for="birthdate" class="form-label">Birthdate</label>
+                                <div class="form-group col-5">
+                                    <select id="month" placeholder="Month" class="form-control" aria-placeholder="month">
+                                        <!-- Add months here -->
+                                    </select>
+                                </div>
+                                <div class="form-group col-3">
+                                    <select id="day" class="form-control" aria-placeholder="day">
+                                        <!-- Add days here -->
+                                    </select>
+                                </div>
+                                <div class="form-group col-4 mb-2">
+                                    <select id="year" class="form-control" aria-placeholder="year">
+                                        <!-- Add years here-->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="d-flex justify-content-left ps-4 gap-3 mx-auto mt-3">
+                            <div class="border border-white rounded-2 p-sm-1 p-md-2 p-lg-2 p-xl-2">
+                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio" name="flexRadioDefault" id="Male">
+                                <label class="form-check-label text-dark me-xl-2 me-lg-2 me-md-2" for="Male">
+                                    Male
+                                </label>
+                            </div>
+                            <div class="border border-white rounded-2 p-sm-1 p-md-2 p-lg-2 p-xl-2">
+                                <input class="form-check-input me-xl-2 me-lg-2 me-md-2" type="radio" name="flexRadioDefault" id="Female">
+                                <label class="form-check-label text-dark me-xl-2 me-lg-2 me-md-2" for="Female">
+                                    Female
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="col-6 mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="">Select role</option>
+                                <option value="User">User</option>
+                                <option value="Staff">Staff</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+
+                        <div class="col-6 mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" 
+                            pattern="^[a-zA-Z0-9]+$" title="Username can only contain letters and numbers." required">
+                        </div>
+                
+                        <div class="col-6 mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" 
+                            minlength="8" title="Password must be at least 8 characters long." required>
+                        </div>
+                    </div>
+                
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Register</button>
+                    </form>
+        </div>
+    </div>
+
+<script src="../../script/scriptCreateStaffAccount.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>

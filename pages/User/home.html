@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../style/User/home.css">
+    <link rel="stylesheet" href="../../style/User/navbar.css">
+    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+    
+</head>
+
+<body>
+    
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #2C3E50;">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="home.html">
+                <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: #DAA520;" href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="mapViewDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            View
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="mapViewDropdown">
+                            <li><a class="dropdown-item" href="map.html">Map View</a></li>
+                            <li><a class="dropdown-item" href="chart.html">Chart View</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="createReport.html">Create Report</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" href="../../pages/public/index.html">Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="home-content">
+                    <h3 class="text-center text-light">Barangay Nueva HOTLINES</h3> <hr>
+                    <div class="contact-info mt-4">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>Telephone: 8727-6425</span>
+                        </div>
+                        <hr class="divider">
+                        <div class="contact-item">
+                            <i class="fa-solid fa-mobile"></i>
+                            <span>Cellphone: 09189071233</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="events-section">
+                    <h3 class="text-center">Barangay Nueva's Upcoming Events</h3><hr>
+                    <div id="eventCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="../../1.png" class="d-block w-100" alt="Event 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="../../2.png" class="d-block w-100" alt="Event 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="../../3.png" class="d-block w-100" alt="Event 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+    
+        // Listen for new report notifications
+        socket.on('incident_confirmed', (data) => {
+            const userConfirmed = confirm(data.description + "\nClick OK to view the map.");
+            if (userConfirmed) {
+                const reportId = data.circleID;
+                const reportDescription = encodeURIComponent(data.description);
+                const reportLocation = encodeURIComponent(JSON.stringify({ lat: data.latitude, lng: data.longitude }));
+                window.location.href = `map.html?reportId=${reportId}&description=${reportDescription}&location=${reportLocation}`;
+            }
+        });
+    </script>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <script src="../../script/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../style/User/navbar.css">
+    <link rel="stylesheet" href="../../style/User/chart.css">
+    
+    <script src="https://cdn.socket.io/4.5.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <!--Directory ko ito kung saan nakalagay yung bootstrap ko. Papalitan nalang ng link ng bootstrap online-->
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #2C3E50;">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">
+            <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" style="color: #DAA520;" id="mapViewDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        View
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="mapViewDropdown">
+                        <li><a class="dropdown-item" href="map.html">Map View</a></li>
+                        <li><a class="dropdown-item" style="color: #DAA520;" href="chart.html">Chart View</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="createReport.html">Create Report</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="../../pages/public/index.html">Log out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+
+    <div class="container-fluid">
+      <div class="container my-4">
+        <h1 class="text-center mb-4">Crime Reports Chart</h1>
+    
+        <!-- Filter Section -->
+        <div class="card p-3 mb-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="viewMode" class="form-label">View Mode:</label>
+              <select id="viewMode" class="form-select">
+                <option value="totalCategory">Category Reports</option>
+                <option value="totalReports">Total Reports</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="dateRange" class="form-label">Date Range:</label>
+              <input id="dateRange" type="text" class="form-control" placeholder="Select date range">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button id="filterButton" class="btn btn-primary w-100">Filter</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card p-3">
+          <div id="chartContainer" style="overflow-x: auto; white-space: nowrap;">
+            <canvas id="crimeChart" style="min-width: auto;"></canvas>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="../../script/User/chart.js"></script>
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+</body>
+
+</html>

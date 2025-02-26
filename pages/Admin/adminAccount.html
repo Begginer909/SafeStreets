@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
+    
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="../../style/styleAdmin.css">
+        <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous">
+        </script>
+
+        <style>
+            .navBar a{
+                height: 90px;
+                background-color: lightgrey;
+                border: 1px solid black;
+                text-align: center;
+                padding-top: 30px;
+                color: black;
+                text-decoration: none;
+                font-size: large;
+            }
+            .active {
+                background-color: #1abc9c; /* Highlight active link */
+            }
+        </style>
+
+    </head>
+<body>
+
+    <div class="container-fluid">  
+        <div class="row mx-2 mt-3 border border-dark">
+            <div class="col-2 border border-black" style="width: 25%; background-color: #2C3E50;">
+                <div>
+                    <h1 class="mt-5 text-center text-light">Dashboard</h1>
+                    <hr>
+                    <div class="navBar">
+                        <a type="button" href ="#" class="text-center mt-4 w-100" style="background-color: #1abc9c;">User Account</button>
+                        <a type="button" href="adminStaffAccount.html" class= "my-3 w-100" >Staff Account</a>
+                        <a type="button" href="createStaffAccount.html" class="mb-3 w-100 active">Create Staff Account</a>
+                        <a type="button" href="home.html" class="mb-4 w-100">Back</a>
+                    </div>
+                </div>  
+            </div>
+            <div class="col-8 ms-5">
+                <h1 class="text-center pt-3">USERS ACCOUNT</h1>
+                <table id="taskTable">
+                    <thead>
+                    <tr>
+                        <th class = "text-center">USER ID</th>
+                        <th class = "text-center">USERNAME</th>
+                        <th class = "text-center">FULL NAME</th>
+                        <th class="text-center">CONTACT</th>
+                        <th class="text-center">ROLE</th>
+                        <th class="text-center">ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="editTaskModal" class="modal fade" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editTaskModalLabel">Edit Account</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editTaskForm">
+                                <input type="hidden" id="editAccountId" />
+                                <input type="hidden" id="editUserId" />
+                                <div class="mb-3">
+                                    <label for="editUsername" class="form-label">Username:</label>
+                                    <input type="text" id="editUsername" class="form-control" required />
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label for="editFirstName" class="form-label">First Name:</label>
+                                        <input type="text" id="editFirstName" class="form-control" required />
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="editLastName" class="form-label">Last Name:</label>
+                                        <input type="text" id="editLastName" class="form-control" required />
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editContact" class="form-label">Contact:</label>
+                                    <input type="text" id="editContact" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editRole" class="form-label">Role:</label>
+                                    <select id="editRole" class="form-select" required>
+                                        <option value="User">User</option>
+                                        <option value="Staff">Staff</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editPassword" class="form-label">Password:</label>
+                                    <input type="password" id="editPassword" class="form-control" placeholder="Leave empty to keep current password" />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    <script src="../../script/userAccount.js"></script>
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+</body>
+</html>

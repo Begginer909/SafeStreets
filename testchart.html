@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crime Reports Chart</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Crime Reports Chart</h1>
+
+    <!-- Filter Section -->
+    <div class="card p-3 mb-4">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="crimeType" class="form-label">Crime Type:</label>
+          <select id="crimeType" class="form-select">
+            <option value="All">All</option>
+            <option value="theft">Theft</option>
+            <option value="assault">Assault</option>
+            <option value="vandalism">Vandalism</option>
+            <option value="bulgary">Bulgary</option>
+            <option value="other">Other</option>
+            <!-- Add more crime types here -->
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="dateRange" class="form-label">Date Range:</label>
+          <input id="dateRange" type="text" class="form-control" placeholder="Select date range">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button id="filterButton" class="btn btn-primary w-100">Filter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="card p-3">
+      <div style="overflow-x: auto; white-space: nowrap;">
+        <canvas id="crimeChart" style="min-width: 800px;"></canvas>
+      </div>
+    </div>    
+  </div>
+
+  <script>
+    const ctx = document.getElementById('crimeChart').getContext('2d');
+    let chart;
+
+    // Initialize Flatpickr
+    flatpickr('#dateRange', { mode: 'range', dateFormat: 'Y-m-d' });
+
+    // Fetch and update chart data
+    const fetchChartData = async (crimeType, startDate, endDate) => {
+      const response = await fetch('http://localhost:3000/api/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ crimeType, startDate, endDate }),
+      });
+      return response.json();
+      console.log("Fetched Data from Server:", data);
+    };
+
+    const updateChart = (data, startDate, endDate) => {
+
+      // Helper to format dates for display
+    const formatDateLabel = (dateStr) => {
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat('en-PH', { month: 'short', day: 'numeric' }).format(date);
+    };
+    
+    // Generate date labels for the selected range
+    const generateDateLabels = (start, end) => {
+      const dates = [];
+      let currentDate = new Date(start);
+      const lastDate = new Date(end);
+
+      while (currentDate <= lastDate) {
+        dates.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return dates;
+    };
+
+    const rawDateLabels = generateDateLabels(startDate, endDate); // Raw date labels
+    const displayDateLabels = rawDateLabels.map(formatDateLabel); // Formatted for display
+    const dateLabels = generateDateLabels(startDate, endDate);
+
+    const normalizedData = data.map(item => ({
+    ...item,
+    date: new Date(item.date).toISOString().split('T')[0], // Convert to YYYY-MM-DD
+    }));
+
+    const crimeTypes = [...new Set(data.map(item => item.crimeType))];
+
+    const datasets = crimeTypes.map(crimeType => {
+    const counts = dateLabels.map(date => {
+      const match = normalizedData.find(d => d.date === date && d.crimeType === crimeType);
+      return match ? match.count : 0;
+    });
+
+      return {
+        label: crimeType,
+        data: counts,
+        backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.2)`,
+        borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+        borderWidth: 1
+      };
+    });
+
+    console.log("Normalized Data:", normalizedData);
+    console.log("Date Labels:", dateLabels);
+    console.log("Datasets:", datasets);
+
+    if (chart) {
+      chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: displayDateLabels,
+        datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x:{},
+          y: { beginAtZero: true }
+        },
+        plugins: {
+          legend: { display: true }
+        }
+      }
+    });
+  };
+
+  document.getElementById('filterButton').addEventListener('click', async () => {
+    const crimeType = document.getElementById('crimeType').value;
+    const dateRange = document.getElementById('dateRange').value.split(' to ');
+    const [startDate, endDate] = dateRange;
+
+    if (startDate && endDate) {
+      const data = await fetchChartData(crimeType, startDate, endDate);
+      updateChart(data, startDate, endDate);
+    } else {
+      alert('Please select a valid date range.');
+    }
+  });
+
+    // Load initial chart with all data
+    //document.getElementById('filterButton').click();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+#map{
+    width: 100%; /* Full width */
+    height: 60vh; /* 60% of the viewport height */
+    border: 1px solid #ccc; /* Optional: Add a border for visibility */
+}
+
+/* Optional: Adjust the map container for smaller screens */
+@media (max-width: 576px) {
+    #map {
+        height: 40vh; /* Reduce height on small screens */
+    }
+}
+
+.circle-tooltip {
+    font-size: 14px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+
+.map{
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#content {
+    transition: width 0.5s ease; /* Smooth transition for the width adjustment */
+}
+

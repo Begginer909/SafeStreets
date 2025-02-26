@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../style/styleReport.css">
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../style/User/navbar.css">
+    <script src="https://kit.fontawesome.com/66c0e9ccd8.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #2C3E50;">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="home.html">
+                <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="mapViewDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            View
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="mapViewDropdown">
+                            <li><a class="dropdown-item" href="map.html">Map View</a></li>
+                            <li><a class="dropdown-item" href="chart.html">Chart View</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: #DAA520;" href="createReport.html">Create Report</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" href="../../pages/public/index.html">Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4">
+        <br>
+        <div class="row mb-5 py-5 border border-2 border-dark position-relative d-flex justify-content-center" style="background-color: #f8f9fa;">
+            <div class="col-12 col-md-8 col-lg-6 px-5 py-5 report-container">
+                <h1 class="text-center mb-4">Crime Details</h1>
+                <form id="crime-report-form">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Witness Name:</label>
+                        <input type="text" id="name" name="name" class="form-control" readonly required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Contact Number:</label>
+                        <input type="tel" id="contact" name="contact" class="form-control" readonly required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="crime-type" class="form-label">Type of Crime:</label>
+                        <select id="crime-type" name="crimeType" class="form-select" required>
+                            <option value="">Select a crime type</option>
+                            <option value="flytipping">Fly tipping</option>
+                            <option value="sexual_assault">Sexual Assault</option>
+                            <option value="violent">Violent</option>
+                            <option value="petty">Petty</option>
+                            <option value="drug_offences">Drug offences</option>
+                            <option value="murder">Murder</option>
+                            <option value="prostitution">Prostitution</option>
+                            <option value="theft">Theft</option>
+                            <option value="drunk_driving">Drunk Driving</option>
+                            <option value="robbery">Robbery</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description:</label>
+                        <input type="text" id="describeID" name="description" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="latitude" class="form-label">Latitude:</label>
+                        <input type="text" id="latitude" name="latitude" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="longitude" class="form-label">Longitude:</label>
+                        <input type="text" id="longitude" name="longitude" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="street" class="form-label">Street:</label>
+                        <input type="text" id="street" name="street" class="form-control">
+                    </div>
+
+                    <button class="mb-3" type="button" id="getLocation">Get location</button> <br>
+
+                    <input type="hidden" id="accID" name="accID">
+                    
+                    <label for="image">Upload Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" capture="camera" required>
+
+                    <div class="text-center my-3">
+                        <button type="button" id="submitButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Submit Report</button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmation</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to submit this report?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-primary">Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script/User/userReport.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="../../bootstrap/js/bootstrap.js"></script>
+    <script src="../../script/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+li:hover{
+    background-color: #0066b6;
+}
+.border-responsive {
+    border: none;
+}
+
+@media (min-width: 800px) {
+    .border-responsive {
+        border-right: 1px solid white; /* Example border */
+    }
+}
+.home{
+    background-color: whitesmoke;
+    border: 3px solid #07143f ;
+    margin-right: auto;
+    font-weight: bold;
+}
+.icon{
+    color:black;
+    max-width: 100%;
+    max-height: 100%;
+}
+.divider{
+    width: 100%;
+    border-top: 1px solid #fff;
+}
+.event-images {
+    display: flex;
+    gap: 30px; /* Space between images */
+    margin-top: 15px;
+} 
+.image-container {
+    text-align: center;
+}
+.imageEvents{
+    max-width: 100%;
+    max-height: 100%
+}
+.image-container a {
+    text-decoration: none; /* Remove underline from links */
+    color: black; /* Change link color */
+}
+.image-container a:hover {
+    color: darkblue; /* Hover effect */
+}
+
+

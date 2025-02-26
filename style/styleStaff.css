@@ -1,0 +1,91 @@
+  #notification-card {
+    border: 2px solid #ccc;
+  }
+  
+  #report-count {
+    position: relative;
+    top: -10px;
+    right: -10px;
+    font-size: 18px;
+    display: none;
+  }
+  
+  #report-count.visible {
+    display: inline-block;
+  }
+
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+.modal-content {
+  max-height: 90vh; /* Prevent overflow on smaller screens */
+  overflow-y: auto; /* Add scroll inside modal if content is too large */
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modalMap #map1 {
+  height: 50vh; /* Adjust the height relative to the viewport */
+  width: 100%; /* Ensure full width */
+  max-width: 100%; /* Prevent overflow */
+}
+
+/* Style for the close button */
+.custom-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #000; /* Adjust color as needed */
+}
+.custom-close:hover {
+  color: red; /* Optional hover effect */
+}
+
+.image-container img {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+  transform: scale(1.05);
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Improve spacing between sections */
+.image-container, #map1 {
+  margin-bottom: 20px;
+}
+
+
+  

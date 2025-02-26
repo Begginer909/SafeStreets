@@ -1,0 +1,28 @@
+/* Custom CSS to center the logo */
+@media (max-width: 767.98px) { /* Adjust based on your breakpoint */
+    .navbar-collapse {
+        justify-content: center; /* Center the items in the collapsed state */
+    }
+    .navbar-brand {
+        margin: 0 auto; /* Center the logo */
+    }
+    .navbar-nav {
+        width: 100%; /* Make navbar items take full width */
+        justify-content: flex-start; /* Align items to the left */
+    }
+}
+
+nav.navbar {
+    background-color: #2C3E50; /* Match index.html */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+nav.navbar a.nav-link {
+    color: white; /* Ensure text is white */
+    transition: color 0.3s;
+}
+
+nav.navbar a.nav-link:hover {
+    color: #DAA520; /* Change hover color */
+    background-color: #4a6c96;
+}
