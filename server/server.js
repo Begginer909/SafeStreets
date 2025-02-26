@@ -16,11 +16,9 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 
-CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:3000';
-
 const io = new Server(server, {
   cors: {
-    origin: CLIENT_ORIGIN, // Front-end origin
+    origin: process.env.CLIENT_ORIGIN, // Front-end origin
     methods: ['GET', 'POST'], // Allowed methods
     credentials: true, // Allow cookies or authentication headers,
   }
@@ -28,7 +26,7 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin: CLIENT_ORIGIN,  // Allow requests from localhost (you can specify a specific port if needed)
+  origin: process.env.CLIENT_ORIGIN,  // Allow requests from localhost (you can specify a specific port if needed)
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,  // Allow cookies to be sent with requests
 }));
@@ -998,6 +996,6 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Start the server
 const PORT = 3000;
-server.listen(CLIENT_ORIGIN || PORT, () => {
+server.listen(process.env.CLIENT_ORIGIN || PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
