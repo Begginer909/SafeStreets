@@ -18,8 +18,8 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_ORIGIN, // Front-end origin
-    methods: ['GET', 'POST', 'GET'], // Allowed methods
+    origin: [process.env.CLIENT_ORIGIN, 'http://127.0.0.1:5500'], // Front-end origin
+    methods: ['GET', 'POST'], // Allowed methods
     credentials: true, // Allow cookies or authentication headers,
   }
 });
@@ -47,9 +47,13 @@ const db = mysql.createConnection({
 db.connect((err) => {
   if (err) throw err;
   console.log('Connected to MySQL database!');
+  console.log("DB_HOST:", process.env.DB_HOST);
+  console.log("DB_PORT:", process.env.DB_PORT);
+  console.log("DB_USER:", process.env.DB_USER);
+  console.log("DB_NAME:", process.env.DB_NAME);
 });
 
-// Separate Login Endpoint by Role
+// Separate Login Endpoint by Roletaskkill /PID 5692 /F 
 app.post('/login/:role', async (req, res) => {
   const { role } = req.params; // Get role from the route
   const { username, password } = req.body;
