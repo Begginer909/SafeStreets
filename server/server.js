@@ -41,7 +41,7 @@ const db = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.PORT
+  port: process.env.DB_PORT
 });
 
 db.connect((err) => {
@@ -995,8 +995,6 @@ io.on('connection', (socket) => {
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Start the server
-const PORT = 3000;
-server.listen(process.env.PORT || PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+server.listen(process.env.PORT, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
