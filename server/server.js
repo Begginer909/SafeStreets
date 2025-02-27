@@ -489,6 +489,8 @@ app.post('/notifications/view', (req, res) => {
 app.post('/notifications/send', (req, res) => {
   const { notificationID } = req.body;
 
+  console.log("Received notificationID:", notificationID);
+
   const query = `
     INSERT INTO tblreport (accID, crimeType, description, latitude, longitude, street, createdAt)
     SELECT accID, crimeType, description, latitude, longitude, street, createdAt
@@ -678,7 +680,12 @@ app.get('/user/home', verifyRole('User'), (req, res) => {
 
 // Logout endpoint
 app.post('/logout', (req, res) => {
-  res.clearCookie('auth_token'); // Clear the auth_token cookie
+  res.clearCookie('auth_token', { 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'None' 
+  }); // Clear the auth_token cookie
+
   res.json({ message: 'Logged out successfully' });
 });
 
