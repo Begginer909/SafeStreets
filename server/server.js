@@ -203,7 +203,7 @@ app.get('/userAccount/:role', (req, res) => {
 
 // Register endpoint (with bcrypt)
 app.post('/register', async (req, res) => {
-  const { firstName, lastName, contact, password, birthdate, gender, username, role } = req.body;
+  const { firstName, lastName, contact, password, birthday, gender, username, role } = req.body;
 
   // Hash the password
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -214,7 +214,7 @@ app.post('/register', async (req, res) => {
       VALUES (?, ?, ?, ?, ?)
   `;
 
-  db.query(profileSql, [firstName, lastName, contact, birthdate, gender], (err, profileResult) => {
+  db.query(profileSql, [firstName, lastName, contact, birthday, gender], (err, profileResult) => {
     if (err) {
       console.error('Error inserting into tbl_information:', err);
       return res.status(500).json({ error: 'Failed to save user profile.', details: err.message });

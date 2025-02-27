@@ -75,7 +75,7 @@ const formData = {
     lastName: document.getElementById('lastName').value.trim(),
     contact: document.getElementById('contact').value.trim(),
     password: document.getElementById('password').value.trim(),
-    birthdate: `${String(document.getElementById('year').value)}-${String(document.getElementById('month').value).padStart(2, '0')}-${String(document.getElementById('day').value).padStart(2, '0')}`,
+    birthday: `${String(document.getElementById('year').value)}-${String(document.getElementById('month').value).padStart(2, '0')}-${String(document.getElementById('day').value).padStart(2, '0')}`,
     gender: document.querySelector('input[name="flexRadioDefault"]:checked')?.id || '',
     username: document.getElementById('username').value.trim(),
 };
