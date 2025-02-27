@@ -112,7 +112,7 @@ try {
     const result = await response.json();
     if (response.ok) {
         alert(result.message);
-        window.location.href = '../../pages/public/index.html'; // Redirect after success
+        window.location.href = '../../index.html'; // Redirect after success
     } else {
         alert('Error: ' + result.error);
     }
