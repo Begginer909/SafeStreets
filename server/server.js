@@ -489,8 +489,6 @@ app.post('/notifications/view', (req, res) => {
 app.post('/notifications/send', (req, res) => {
   const { notificationID } = req.body;
 
-  console.log("Received notificationID:", notificationID);
-
   const query = `
     INSERT INTO tblreport (accID, crimeType, description, latitude, longitude, street, createdAt)
     SELECT accID, crimeType, description, latitude, longitude, street, createdAt
