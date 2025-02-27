@@ -124,7 +124,7 @@ app.post('/login/:role', async (req, res) => {
     res.json({ 
       message: 'Login successful', 
       token, 
-      redirectUrl: `../../pages/${role}/home.html` 
+      redirectUrl: `pages/${role}/home.html` 
     });
   });
 });
