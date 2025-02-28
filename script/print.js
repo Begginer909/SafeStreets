@@ -7,14 +7,22 @@ document.addEventListener('DOMContentLoaded', function () {
     // Expand functionality
     expandButton.addEventListener('click', function () {
         if (crimeChart.style.width === '100%') {
-            crimeChart.style.width = '1100px'; // or whatever your default size is
+            crimeChart.style.width = '900px'; // or whatever your default size is
             crimeChart.style.height = '400px'; // set to your desired height
             expandButton.textContent = 'Expand for Print'; // Reset button text
         } else {
             crimeChart.style.width = '100%'; // Expand to full width
-            crimeChart.style.height = '600px'; // Set to your desired height
+            crimeChart.style.height = '400px'; // Set to your desired height
             expandButton.textContent = 'Collapse'; // Change button text
         }
+
+        // Ensure Chart.js updates properly
+        setTimeout(() => {
+            if (window.myChart) {
+                window.myChart.resize(); // Force Chart.js to re-render
+            }
+        }, 300); // Delay allows the DOM to update first
+        
     });
 
     // Save as PDF functionality

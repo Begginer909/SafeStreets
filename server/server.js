@@ -788,31 +788,31 @@ app.post('/api/reports', (req, res) => {
     if(timeFrame === 'year'){
       query = `
         SELECT 
-          YEAR(createdAt) AS report_year,
+          YEAR(createdAt) AS date,
           circleID AS area,
           crimeType,
-          COUNT(*) AS total_reports_per_type,
-          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt), circleID) AS total_reports_per_area,
-          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt)) AS total_reports_per_year
+          COUNT(*) AS totalReportType,
+          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt), circleID) AS totalReportArea,
+          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt)) AS totalReportYear
         FROM tblreport
         WHERE YEAR(createdAt) BETWEEN ? AND ?
         GROUP BY YEAR(createdAt), circleID, crimeType
-        ORDER BY report_year ASC, area ASC, total_reports_per_type DESC;
+        ORDER BY date ASC, area ASC, totalReportType DESC;
         `;
     }
     else if(timeFrame === 'month'){
       query = `
         SELECT 
-          DATE_FORMAT(createdAt, '%m') AS report_month,
+          DATE_FORMAT(createdAt, '%m') AS date,
           circleID AS area,
           crimeType,
-          COUNT(*) AS total_reports_per_type,
-          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt), circleID) AS total_reports_per_area,
-          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt)) AS total_reports_per_month
+          COUNT(*) AS totalReportType,
+          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt), circleID) AS totalReportArea,
+          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt)) AS totalReportMonth
         FROM tblreport
         WHERE createdAt BETWEEN ? AND ? 
         GROUP BY MONTH(createdAt), circleID, crimeType
-        ORDER BY report_month ASC, area ASC, total_reports_per_type DESC
+        ORDER BY date ASC, area ASC, totalReportType DESC
         `;
     }
     else{

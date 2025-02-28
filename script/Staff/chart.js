@@ -20,10 +20,6 @@
       };
       
 const updateChart = (data, viewMode, timeFrame) => {
-      if (!data.length) {
-        alert('No data available for the selected range.');
-        return;
-      }
 
       // Helper to format dates for display
       const formatDateLabel = (dateStr) => {
@@ -44,15 +40,79 @@ const updateChart = (data, viewMode, timeFrame) => {
         const filteredData = data.filter(item => item.area !== 0);
         const circleIDs = [...new Set(filteredData.map(item => item.area))]; // Unique circle IDs
         const datasets = [];
-        const threshold = 40; // Initialize threshold value 
+        
+        const threshold = timeFrame === 'year' ? 100 : 
+                  timeFrame === 'month' ? 60 : 40; // Initialize threshold value 
       
         if (viewMode === 'totalReports') {
 
           if(timeFrame == 'year'){
+            // Create a dataset for each circleID
+            circleIDs.forEach(circleID => {
+              const datasetData = labels.map(date => {
+                const entry = data.find(item => item.date === date && item.area === circleID);
+                return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+              });
 
+              console.log("DataSetData: " + datasetData);
+
+            // Calculate total count for this circleID
+            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
+
+            console.log("Total Count: " + totalCount);
+
+            // Calculate percentage based on the threshold
+            const percentageData = datasetData.map(count => {
+              return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+            });
+
+              datasets.push({
+                label: `Area: ${circleID}`,
+                data: percentageData,
+                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                borderWidth: 1,
+                counts: datasetData, // Set counts for later use
+                totalCount 
+              });
+            });
+
+            // Sort datasets based on totalCount in descending order
+            datasets.sort((a, b) => b.totalCount - a.totalCount);
           }
           else if(timeFrame == 'month'){
+            // Create a dataset for each circleID
+            circleIDs.forEach(circleID => {
+              const datasetData = labels.map(date => {
+                const entry = data.find(item => item.date === date && item.area === circleID);
+                return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+              });
 
+              console.log("DataSetData: " + datasetData);
+
+            // Calculate total count for this circleID
+            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
+
+            console.log("Total Count: " + totalCount);
+
+            // Calculate percentage based on the threshold
+            const percentageData = datasetData.map(count => {
+              return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+            });
+
+              datasets.push({
+                label: `Area: ${circleID}`,
+                data: percentageData,
+                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                borderWidth: 1,
+                counts: datasetData, // Set counts for later use
+                totalCount 
+              });
+            });
+
+            // Sort datasets based on totalCount in descending order
+            datasets.sort((a, b) => b.totalCount - a.totalCount);
           }
           else{
               // Create a dataset for each circleID
@@ -131,7 +191,7 @@ const updateChart = (data, viewMode, timeFrame) => {
         // Dynamically adjust the chart's width
         const canvas = document.getElementById('crimeChart');
       
-        const chartWidth = Math.max(1100, labels.length * 80); // 80px per label
+        const chartWidth = Math.max(900, labels.length * 80); // 80px per label
         const chartHeight = 400; // Fixed height in pixels
       
         canvas.style.width = `${chartWidth}px`; // CSS width
@@ -188,6 +248,9 @@ const updateChart = (data, viewMode, timeFrame) => {
               },
             },
             plugins: {
+              datalabels: {
+                display: false,
+              },
               tooltip: {
                 callbacks: {
                   title: function (tooltipItems) {
@@ -202,13 +265,16 @@ const updateChart = (data, viewMode, timeFrame) => {
                     const percentage = tooltipItem.raw; // Percentage value
                     const count = dataset.counts[tooltipItem.dataIndex]; // Raw count
                     const area = dataset.label.split(': ')[1]; // Extract Area ID
-                    
+
                     if(viewMode == "totalReports"){
 
-                      // Find all crimes reported in this area
-                      const crimesInArea = data
-                      .filter(item => item.area == area) // Match area
-                      .reduce((acc, item) => {
+                      const reportDate = tooltipItem.label; // Extract the date from the tooltip
+
+                      // Ensure filtering includes both date and area
+                      const areaData = data.filter(item => item.area == area && item.date == reportDate);
+
+                      // Group crimes and count occurrences
+                      const crimesInArea = areaData.reduce((acc, item) => {
                         acc[item.crimeType] = (acc[item.crimeType] || 0) + item.totalReportType;
                         return acc;
                       }, {});
@@ -304,15 +370,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const updateDatePicker = () => {
       if (!dateRangePicker) return; // Prevent errors if the element is missing
-      const selectedTimeFrame = timeFrameSelect.value;
 
       flatpickr(dateRangePicker, {
           mode: 'range',
-          dateFormat: selectedTimeFrame === 'day' ? 'Y-m-d' :
-                      selectedTimeFrame === 'month' ? 'Y-m' :
-                      'Y',
+          dateFormat: 'Y-m-d',
           enableTime: false
       });
+
+      window.addEventListener('resize', function () {
+        if (window.myChart) {
+            window.myChart.resize();
+        }
+    });
   };
 
   // Update the date picker when the time frame changes

@@ -68,7 +68,7 @@
                             <label for="dateRange" class="form-label">Select Date Range:</label>
                             <input type="text" id="dateRange" class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="timeFrame" class="form-label">Time Frame:</label>
                             <select id="timeFrame" class="form-select">
                                 <option value="day">Day</option>
@@ -76,7 +76,14 @@
                                 <option value="year">Year</option>
                             </select>
                         </div>
-                        <div class="col-md-3 d-flex align-items-end">
+                        <div class="col-md-2">
+                            <label for="chartView" class="form-label">Chart View</label>
+                            <select id="chartView" class="form-select">
+                                <option value="total">Total</option>
+                                <option value="area">Area</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
                             <button id="filterButton" class="btn btn-primary w-100">Filter</button>
                         </div>
                     </div>
@@ -95,7 +102,7 @@
                 
                 <div class="p-3" style="border: 1px solid #16a085;">
                     <div id="chartContainer" style="overflow-x: auto; white-space: nowrap;">
-                        <canvas id="crimeChart" style="min-width: 1100px;"></canvas>
+                        <canvas id="crimeChart" style="min-width: 900px;"></canvas>
                     </div>
                 </div>
                 
