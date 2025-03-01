@@ -58,32 +58,25 @@
                 <div class="card p-3 mb-4">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label for="viewMode" class="form-label">View Mode:</label>
-                            <select id="viewMode" class="form-select">
-                                <option value="totalCategory">Category Reports</option>
-                                <option value="totalReports">Total Reports</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="dateRange" class="form-label">Select Date Range:</label>
-                            <input type="text" id="dateRange" class="form-control">
-                        </div>
-                        <div class="col-md-2">
                             <label for="timeFrame" class="form-label">Time Frame:</label>
                             <select id="timeFrame" class="form-select">
                                 <option value="day">Day</option>
                                 <option value="month">Month</option>
                                 <option value="year">Year</option>
                             </select>
+                        </div>  
+                        <div class="col-md-3">
+                            <label for="dateRange" class="form-label">Select Date Range:</label>
+                            <input type="text" id="dateRange" class="form-control">
                         </div>
-                        <div class="col-md-2">
-                            <label for="chartView" class="form-label">Chart View</label>
-                            <select id="chartView" class="form-select">
+                        <div class="col-md-3">
+                            <label for="viewMode" class="form-label">View Mode</label>
+                            <select id="viewMode" class="form-select">
                                 <option value="total">Total</option>
                                 <option value="area">Area</option>
                             </select>
                         </div>
-                        <div class="col-md-2 d-flex align-items-end">
+                        <div class="col-md-3 d-flex align-items-end">
                             <button id="filterButton" class="btn btn-primary w-100">Filter</button>
                         </div>
                     </div>

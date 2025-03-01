@@ -397,7 +397,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let [startDate, endDate] = dateRange;
 
   if (startDate && endDate) {
-    const data = await fetchChartData(viewMode, timeFrame, startDate, endDate);
+    const data = await fetchChartData(timeFrame, startDate, endDate, viewMode,);
     updateChart(data, viewMode, timeFrame);
     console.log("Data: " + data);
   } else {
