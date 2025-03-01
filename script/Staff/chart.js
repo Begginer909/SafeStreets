@@ -5,16 +5,16 @@
   let chart;
 
       // Fetch and update chart data
-      const fetchChartData = async ( viewMode, timeFrame, startDate, endDate) => {
+      const fetchChartData = async (timeFrame, startDate, endDate, viewMode) => {
         try {
           const response = await fetch('http://localhost:3000/api/reports', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ viewMode, timeFrame, startDate, endDate }),
+            body: JSON.stringify({ timeFrame, startDate, endDate, viewMode }),
           });
           return await response.json();
         } catch (error) {
-          console.error('Error fetching chart data:', error);
+          alert("Error fetching chart Data");
           return [];
         }
       };
@@ -36,98 +36,81 @@ const updateChart = (data, viewMode, timeFrame) => {
       };
       
         // Format data and generate datasets for Chart.js
-        const labels = [...new Set(data.map(item => item.date))]; // Unique dates
+        const labels = [...new Set(data.map(item => timeFrame === 'month' ? item.date.slice(0, 7) : item.date))];
+        
         const filteredData = data.filter(item => item.area !== 0);
         const circleIDs = [...new Set(filteredData.map(item => item.area))]; // Unique circle IDs
         const datasets = [];
         
         const threshold = timeFrame === 'year' ? 100 : 
-                  timeFrame === 'month' ? 60 : 40; // Initialize threshold value 
+                  timeFrame === 'month' ? 78 : 40; // Initialize threshold value 
       
-        if (viewMode === 'totalReports') {
+        if(timeFrame == 'year'){
+          if(viewMode == 'total'){
+            const datasetData = labels.map(date => {
+              const entry = data.find(item => item.date === date);
+              return entry ? Number(entry.totalReportYear) : 0; // Get total reports for that date
+            });
 
-          if(timeFrame == 'year'){
-            // Create a dataset for each circleID
-            circleIDs.forEach(circleID => {
-              const datasetData = labels.map(date => {
-                const entry = data.find(item => item.date === date && item.area === circleID);
-                return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
-              });
-
-              console.log("DataSetData: " + datasetData);
-
-            // Calculate total count for this circleID
+            // Calculate total count for all entries
             const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
-
-            console.log("Total Count: " + totalCount);
 
             // Calculate percentage based on the threshold
             const percentageData = datasetData.map(count => {
               return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
             });
 
-              datasets.push({
-                label: `Area: ${circleID}`,
-                data: percentageData,
-                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
-                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
-                borderWidth: 1,
-                counts: datasetData, // Set counts for later use
-                totalCount 
-              });
+            datasets.push({
+              label: `Total Reports`,
+              data: percentageData,
+              backgroundColor: `rgba(54, 162, 235, 0.6)`, // Blue color
+              borderColor: `rgba(54, 162, 235, 1)`,
+              borderWidth: 1,
+              counts: datasetData, // Store counts for later use
+              totalCount
             });
-
-            // Sort datasets based on totalCount in descending order
-            datasets.sort((a, b) => b.totalCount - a.totalCount);
-          }
-          else if(timeFrame == 'month'){
-            // Create a dataset for each circleID
-            circleIDs.forEach(circleID => {
-              const datasetData = labels.map(date => {
-                const entry = data.find(item => item.date === date && item.area === circleID);
-                return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
-              });
-
-              console.log("DataSetData: " + datasetData);
-
-            // Calculate total count for this circleID
-            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
-
-            console.log("Total Count: " + totalCount);
-
-            // Calculate percentage based on the threshold
-            const percentageData = datasetData.map(count => {
-              return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
-            });
-
-              datasets.push({
-                label: `Area: ${circleID}`,
-                data: percentageData,
-                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
-                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
-                borderWidth: 1,
-                counts: datasetData, // Set counts for later use
-                totalCount 
-              });
-            });
-
-            // Sort datasets based on totalCount in descending order
-            datasets.sort((a, b) => b.totalCount - a.totalCount);
           }
           else{
-              // Create a dataset for each circleID
-              circleIDs.forEach(circleID => {
-                const datasetData = labels.map(date => {
-                  const entry = data.find(item => item.date === date && item.area === circleID);
-                  return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
-                });
+            // Create a dataset for each circleID
+            circleIDs.forEach(circleID => {
+              const datasetData = labels.map(date => {
+              const entry = data.find(item => item.date === date && item.area === circleID);
+              return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+            });
 
-                console.log("DataSetData: " + datasetData);
+            // Calculate total count for this circleID
+            const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
 
-              // Calculate total count for this circleID
+            // Calculate percentage based on the threshold
+            const percentageData = datasetData.map(count => {
+            return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+            });
+
+            datasets.push({
+              label: `Area: ${circleID}`,
+              data: percentageData,
+              backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+              borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+              borderWidth: 1,
+              counts: datasetData, // Set counts for later use
+              totalCount 
+              });
+            }); 
+          }
+
+            // Sort datasets based on totalCount in descending order
+            datasets.sort((a, b) => b.totalCount - a.totalCount);
+        }
+        else if(timeFrame == 'month'){
+
+            if(viewMode == 'total'){
+              const datasetData = labels.map(date => {
+                const entry = data.find(item => item.date.startsWith(date)); // Match by month
+                return entry ? Number(entry.totalReportMonth) : 0;
+              });              
+
+              // Calculate total count for all entries
               const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
-
-              console.log("Total Count: " + totalCount);
 
               // Calculate percentage based on the threshold
               const percentageData = datasetData.map(count => {
@@ -135,59 +118,102 @@ const updateChart = (data, viewMode, timeFrame) => {
               });
 
               datasets.push({
-                label: `Area: ${circleID}`,
+                label: `Total Reports`,
                 data: percentageData,
-                backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
-                borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                backgroundColor: `rgba(54, 162, 235, 0.6)`, // Blue color
+                borderColor: `rgba(54, 162, 235, 1)`,
                 borderWidth: 1,
-                counts: datasetData, // Set counts for later use
-                totalCount 
+                counts: datasetData, // Store counts for later use
+                totalCount
               });
-            });
-              // Sort datasets based on totalCount in descending order
-              datasets.sort((a, b) => b.totalCount - a.totalCount);
-          }
+            }
+            else{
+              // Create a dataset for each circleID
+              circleIDs.forEach(circleID => {
+                const datasetData = labels.map(date => {
+                  const entry = data.find(item => item.date.startsWith(date)); // Match by month
+                  return entry ? Number(entry.totalReportMonth) : 0;
+                });                
 
+                // Calculate total count for this circleID
+                const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
 
-          // Check if datasets are created correctly
-          console.log("Datasets:", datasets);
-          console.log("Fetched Data:", data);
-        } 
-        else if (viewMode === 'totalCategory') {
-          const crimeTypes = [...new Set(data.map(item => item.crimeType))]; // Unique crime types
-          const crimeData = crimeTypes.map(crimeType => {
-            const counts = labels.map(date => {
-              const entry = data.find(item => item.date === date && item.crimeType === crimeType);
-              return entry ? entry.count : 0; // Count for this date and crimeType
-            });
-            console.log(counts);
+                // Calculate percentage based on the threshold
+                const percentageData = datasetData.map(count => {
+                  return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+                });
 
-            // Calculate total count for this crime type
-            const totalCount = counts.reduce((sum, count) => sum + count, 0);
-
-            return {
-              crimeType,
-              counts,
-              totalCount,
-            };
-          });
-
-            // Sort crime data based on totalCount in descending order
-            crimeData.sort((a, b) => b.totalCount - a.totalCount);
-
-              // Create datasets based on sorted crime data
-              crimeData.forEach(({ crimeType, counts }) => {
                 datasets.push({
-                  label: `Crime: ${crimeType}`,
-                  data: counts.map(count => ((count / threshold) * 100).toFixed(2)), // Convert to percentage
+                  label: `Area: ${circleID}`,
+                  data: percentageData,
                   backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
                   borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
                   borderWidth: 1,
-                  counts, // Store raw counts for later use
+                  counts: datasetData, // Set counts for later use
+                  totalCount 
+                  });
                 });
-              });
-        }
-      
+              }
+
+                // Sort datasets based on totalCount in descending order
+                datasets.sort((a, b) => b.totalCount - a.totalCount);
+          }
+          else if(timeFrame == 'day'){
+            if(viewMode == 'total'){
+              const datasetData = labels.map(date => {
+                const entry = data.find(item => item.date === date);
+                  return entry ? Number(entry.totalReportDay) : 0; // Get total reports for that date
+                });
+    
+                // Calculate total count for all entries
+                const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
+    
+                // Calculate percentage based on the threshold
+                const percentageData = datasetData.map(count => {
+                  return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+                });
+    
+                datasets.push({
+                  label: `Total Reports`,
+                  data: percentageData,
+                  backgroundColor: `rgba(54, 162, 235, 0.6)`, // Blue color
+                  borderColor: `rgba(54, 162, 235, 1)`,
+                  borderWidth: 1,
+                  counts: datasetData, // Store counts for later use
+                  totalCount
+                }); 
+              }
+              else{
+                // Create a dataset for each circleID
+                circleIDs.forEach(circleID => {
+                  const datasetData = labels.map(date => {
+                    const entry = data.find(item => item.date === date && item.area === circleID);
+                    return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+                  });
+
+                  // Calculate total count for this circleID
+                  const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
+
+                  // Calculate percentage based on the threshold
+                  const percentageData = datasetData.map(count => {
+                    return totalCount > 0 ? ((count / threshold) * 100).toFixed(2) : 0; // Convert to percentage
+                  });
+
+                  datasets.push({
+                    label: `Area: ${circleID}`,
+                    data: percentageData,
+                    backgroundColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.6)`,
+                    borderColor: `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`,
+                    borderWidth: 1,
+                    counts: datasetData, // Set counts for later use
+                    totalCount 
+                  });
+                });
+              }
+                // Sort datasets based on totalCount in descending order
+                datasets.sort((a, b) => b.totalCount - a.totalCount);
+          }
+
         // Dynamically adjust the chart's width
         const canvas = document.getElementById('crimeChart');
       
@@ -204,7 +230,7 @@ const updateChart = (data, viewMode, timeFrame) => {
       
         const ctx = canvas.getContext('2d');
         ctx.scale(devicePixelRatio, devicePixelRatio);
-      
+
         // Destroy existing chart
         if (chart) {
           chart.destroy();
@@ -224,18 +250,23 @@ const updateChart = (data, viewMode, timeFrame) => {
               x: {
                 maxRotation: 90,
                 minRotation: 45,
+                type: 'category',
+                
                 ticks:{
-                  callback: function (value, index, values) {
+                  maxTicksLimit: timeFrame === 'day' ? 31 : timeFrame === 'month' ? 12 : 5,
+
+                  callback: function (index) {
                     const dataset = this.chart.data.datasets;
                     const hasValue = dataset.some(ds => ds.data[index] > 0);
                     if (!hasValue) return '';
-        
+                    
                     // Format X-axis labels based on selected timeframe
                     const date = labels[index];
-                    if (timeFrame === 'day') return formatDate(date, 'MM-DD-YY');
-                    if (timeFrame === 'month') return formatDate(date, 'MM-YY');
-                    if (timeFrame === 'year') return formatDate(date, 'YY');
-                    return date; // Fallback to default
+                    if (timeFrame === 'day') return formatDate(date, 'MM-DD-YY'); // Example: "01-25-25"
+                    if (timeFrame === 'month') return date.toLocaleString('default', { month: 'short', year: 'numeric' }); // Example: "Jan 2025"
+                    if (timeFrame === 'year') return date.getFullYear().toString(); // Example: "2025"
+                    
+                    return labels[index]; // Fallback to default
                   }
                 },
               },
@@ -256,9 +287,19 @@ const updateChart = (data, viewMode, timeFrame) => {
                   title: function (tooltipItems) {
                     // Get the date from the tooltip label
                     const rawDate = tooltipItems[0].label;
-              
-                    // Format the date properly
-                    return formatDate(rawDate, 'MM-DD-YY'); 
+                    
+                    if (timeFrame == "month") {
+                      const dateObj = new Date(rawDate);
+                      return dateObj.toLocaleString('default', { year: 'numeric', month: 'long' });
+                    }
+                    else if(timeFrame == "year"){
+                      const dateObj = new Date(rawDate);
+                      return dateObj.toLocaleString('default', { year: 'numeric'});
+                    }
+                    else{
+                      const dateObj = new Date(rawDate);
+                      return dateObj.toLocaleString('default', { year: 'numeric', day: 'numeric', month: 'long'}); 
+                    }
                   },
                   label: function (tooltipItem) {
                     const dataset = tooltipItem.dataset;
@@ -266,44 +307,67 @@ const updateChart = (data, viewMode, timeFrame) => {
                     const count = dataset.counts[tooltipItem.dataIndex]; // Raw count
                     const area = dataset.label.split(': ')[1]; // Extract Area ID
 
-                    if(viewMode == "totalReports"){
+                    const reportDate = tooltipItem.label; // Extract the date from the tooltip
 
-                      const reportDate = tooltipItem.label; // Extract the date from the tooltip
+                    // Filter data for the specific date
+                    const dateData = data.filter(item => item.date == reportDate && item.area !== 0);
 
-                      // Ensure filtering includes both date and area
-                      const areaData = data.filter(item => item.area == area && item.date == reportDate);
+                    // Calculate total reports for this date
+                    const totalReports = dateData.reduce((sum, item) => sum + item.totalReportType, 0) || 1;
 
-                      // Group crimes and count occurrences
-                      const crimesInArea = areaData.reduce((acc, item) => {
-                        acc[item.crimeType] = (acc[item.crimeType] || 0) + item.totalReportType;
-                        return acc;
-                      }, {});
+                    // Group reports per area
+                    const areaGroups = {};
+                    dateData.forEach(item => {
+                        if (!areaGroups[item.area]) {
+                            areaGroups[item.area] = { total: 0, crimes: {} };
+                        }
+                        areaGroups[item.area].total += item.totalReportType;
+                        areaGroups[item.area].crimes[item.crimeType] = 
+                            (areaGroups[item.area].crimes[item.crimeType] || 0) + item.totalReportType;
+                      });
 
-                    // Format crime report summary
-                    const crimeReportList = Object.entries(crimesInArea)
-                      .map(([crimeType, crimeCount]) => `${capitalize(crimeType)}: ${crimeCount}`)
-                      .join(", ");
+                      // Format total count
+                      if (viewMode === 'total') {
+                          const summary = [`Total Counts: ${totalReports}`];
 
-                      return [
-                        `Area: ${area}`,
-                        `Report Count: ${count}`,
-                        `Percentage: ${percentage}%`,
-                        `Crime Reports: ${crimeReportList}`,
-                      ];
-                    }
-                    else if(viewMode == "totalCategory"){
-                      // Determine crime type from dataset label or fallback to Total Reports
-                      const crimeType = dataset.label.includes(': ')
-                      ? capitalize(dataset.label.split(': ')[1])
-                      : 'Total Reports';
-                
-                      return [
-                        `Crime Type: ${crimeType}`,
-                        `Report Count: ${count}`,
-                        `Percentage: ${percentage}%`,
-                      ];
-                    }
-                  },
+                          Object.entries(areaGroups).forEach(([areaID, areaData]) => {
+                              // Find top crime(s)
+                              const maxCrimeCount = Math.max(...Object.values(areaData.crimes), 0);
+                              const topCrimes = Object.entries(areaData.crimes)
+                                  .filter(([_, count]) => count === maxCrimeCount)
+                                  .map(([crimeType, crimeCount]) => 
+                                      `${capitalize(crimeType)} (${((crimeCount / areaData.total) * 100).toFixed(2)}%)`
+                                  )
+                                  .join(", ");
+
+                              summary.push(`Area ${areaID}: ${areaData.total} | Crime Trends: ${topCrimes || "N/A"}`);
+                          });
+
+                          return summary;
+                      }
+                      else{
+                        // Ensure filtering includes both date and area
+                        const areaData = data.filter(item => item.area == area && item.date == reportDate);
+
+                        // Group crimes and count occurrences
+                        const crimesInArea = areaData.reduce((acc, item) => {
+                          acc[item.crimeType] = (acc[item.crimeType] || 0) + item.totalReportType;
+                          return acc;
+                        }, {});
+
+                        // Format crime report summary
+                        const crimeReportList = Object.entries(crimesInArea)
+                        .map(([crimeType, crimeCount]) => `${capitalize(crimeType)}: ${crimeCount}`)
+                        .join(", ");
+
+                        return [
+                          `Area: ${area}`,
+                          `Report Count: ${count}`,
+                          `Percentage: ${percentage}%`,
+                          `Crime Reports: ${crimeReportList}`,
+                        ];
+                      }                
+                    },
                 },
               },
               legend: {
@@ -313,13 +377,9 @@ const updateChart = (data, viewMode, timeFrame) => {
                     return chart.data.datasets.map((dataset, i) => {
                       const meta = chart.getDatasetMeta(i);
                       const totalCount = dataset.counts.reduce((sum, count) => sum + count, 0);
-                      const crimeType = dataset.label.includes(': ')
-                        ? capitalize(dataset.label.split(': ')[1])
-                        : 'Total Reports';
 
-                        const text = viewMode === "totalReports"
-                        ? `Area: ${dataset.label.split(': ')[1]} | Total Count: ${totalCount}`
-                        : `Crime Type: ${crimeType} | Total Count: ${totalCount}`;
+                        const text = viewMode === 'total' ? `Total Counts: ${totalCount}`
+                        :`Area: ${dataset.label.split(': ')[1]} | Total Counts: ${totalCount}`;
             
                       return {
                         text: text,
@@ -339,8 +399,6 @@ const updateChart = (data, viewMode, timeFrame) => {
                     const meta = chart.getDatasetMeta(datasetIndex);
                     meta.hidden = !meta.hidden; // Toggle visibility
                     chart.update(); // Re-render the chart
-                  } else {
-                    console.error("Dataset index is undefined for legend item:", legendItem);
                   }
                 },  
               },
@@ -399,12 +457,10 @@ document.addEventListener("DOMContentLoaded", function() {
   if (startDate && endDate) {
     const data = await fetchChartData(timeFrame, startDate, endDate, viewMode,);
     updateChart(data, viewMode, timeFrame);
-    console.log("Data: " + data);
   } else {
       alert('Please select a valid date range.');
     }
 
-  console.log(`Filtering data by: ${timeFrame}, Start: ${startDate}, End: ${endDate}`);
   });
 
 });

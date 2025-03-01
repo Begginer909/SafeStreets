@@ -784,64 +784,52 @@ app.post('/api/reports', (req, res) => {
   let query;
   let params = [newStartDate, newEndDate];
 
-  if (viewMode === 'totalReports') {
-    if(timeFrame === 'year'){
-      query = `
-        SELECT 
-          YEAR(createdAt) AS date,
-          circleID AS area,
-          crimeType,
-          COUNT(*) AS totalReportType,
-          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt), circleID) AS totalReportArea,
-          SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt)) AS totalReportYear
-        FROM tblreport
-        WHERE YEAR(createdAt) BETWEEN ? AND ?
-        GROUP BY YEAR(createdAt), circleID, crimeType
-        ORDER BY date ASC, area ASC, totalReportType DESC;
-        `;
-    }
-    else if(timeFrame === 'month'){
-      query = `
-        SELECT 
-          DATE_FORMAT(createdAt, '%m') AS date,
-          circleID AS area,
-          crimeType,
-          COUNT(*) AS totalReportType,
-          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt), circleID) AS totalReportArea,
-          SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt)) AS totalReportMonth
-        FROM tblreport
-        WHERE createdAt BETWEEN ? AND ? 
-        GROUP BY MONTH(createdAt), circleID, crimeType
-        ORDER BY date ASC, area ASC, totalReportType DESC
-        `;
-    }
-    else{
-      query = `
-        SELECT 
-          DATE(createdAt) AS date,
-          circleID AS area,
-          crimeType,
-          COUNT(*) AS totalReportType,
-          SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt), circleID) AS totalReportArea,
-          SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt)) AS totalReportDay
-        FROM tblreport
-        WHERE createdAt BETWEEN ? AND ?
-        GROUP BY DATE(createdAt), area, crimeType
-        ORDER BY date ASC, area ASC, totalReportType DESC
-        `;
-    }
-  } else if (viewMode === 'totalCategory') {
+  if(timeFrame === 'year'){
     query = `
       SELECT 
-        DATE_FORMAT(createdAt, '%Y-%m-%d') as date, 
-        crimeType, 
-        COUNT(crimeType) as count 
-      FROM tblreport 
-      WHERE createdAt BETWEEN ? AND ? 
-      GROUP BY DATE(createdAt), crimeType
-    `;
+        YEAR(createdAt) AS date,
+        circleID AS area,
+        crimeType,
+        COUNT(*) AS totalReportType,
+        SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt), circleID) AS totalReportArea,
+        SUM(COUNT(*)) OVER (PARTITION BY YEAR(createdAt)) AS totalReportYear
+      FROM tblreport
+      WHERE YEAR(createdAt) BETWEEN ? AND ? AND circleID != 0
+      GROUP BY YEAR(createdAt), circleID, crimeType
+      ORDER BY date ASC, area ASC, totalReportType DESC;
+      `;
+  }
+  else if(timeFrame === 'month'){
+    query = `
+      SELECT 
+        DATE_FORMAT(createdAt, '%Y-%m') AS date,
+        circleID AS area,
+        crimeType,
+        COUNT(*) AS totalReportType,
+        SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt), circleID) AS totalReportArea,
+        SUM(COUNT(*)) OVER (PARTITION BY MONTH(createdAt)) AS totalReportMonth
+      FROM tblreport
+      WHERE createdAt BETWEEN ? AND ? AND circleID != 0
+      GROUP BY MONTH(createdAt), circleID, crimeType
+      ORDER BY date ASC, area ASC, totalReportType DESC
+      `;
+  }
+  else if (timeFrame === 'day'){
+    query = `
+      SELECT 
+        DATE(createdAt) AS date,
+        circleID AS area,
+        crimeType,
+        COUNT(*) AS totalReportType,
+        SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt), circleID) AS totalReportArea,
+        SUM(COUNT(*)) OVER (PARTITION BY DATE(createdAt)) AS totalReportDay
+      FROM tblreport
+      WHERE createdAt BETWEEN ? AND ? AND circleID != 0
+      GROUP BY DATE(createdAt), area, crimeType
+      ORDER BY date ASC, area ASC, totalReportType DESC
+      `;
   } else {
-    return res.status(400).json({ error: 'Invalid view mode' });
+    return res.status(400).json({ error: 'Invalid time frame' });
   }
 
   db.query(query, params, (err, results) => {

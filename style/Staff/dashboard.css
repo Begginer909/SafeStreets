@@ -1,8 +1,12 @@
 body {
-    display: flex;
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
+}
+
+html, body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    width: 100%;
 }
 
 #content {

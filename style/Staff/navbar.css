@@ -1,30 +1,90 @@
 /* Navbar Styles */
 #navbarCol {
-    width: 250px; /* Fixed width for the sidebar */
-    background-color: #2C3E50; /* Background color for the navbar */
-    color: white; /* Text color */
-    padding-top: 20px; /* Padding at the top */
-    position: fixed; /* Fix the sidebar to the left */
-    height: 100%; /* Full height */
-    overflow-y: auto; /* Scroll if content overflows */
-    transition: width 0.3s; /* Smooth transition for collapsible effect */
+    width: 80px; /* Default collapsed */
+    background-color: #2C3E50;
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    transition: width 0.3s ease-in-out;
 }
 
-.navbar-brand {
-    padding: 10px 15px; /* Adjust padding for the brand */
+/* Expanded Navbar */
+#navbarCol.expanded {
+    width: 250px;
 }
 
+/* Hide text when collapsed */
+.nav-text {
+    display: none;
+}
+
+/* Show text when expanded */
+#navbarCol.expanded .nav-text {
+    display: inline;
+}
+
+/* Center align icons */
 .nav-link {
-    color: white; /* Text color for links */
-    padding: 15px 20px; /* Add padding for nav links */
-    font-size: 16px; /* Adjust font size */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
-    display: flex; /* Flexbox for icon and text alignment */
-    align-items: center; /* Center items vertically */
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    font-size: 16px;
+    transition: padding 0.3s ease-in-out;
 }
 
 .nav-link i {
-    margin-right: 10px; /* Space between icon and text */
+    font-size: 20px;
+    transition: margin-right 0.3s ease-in-out;
+}
+
+/* Adjust icon spacing */
+#navbarCol.expanded .nav-link i {
+    margin-right: 10px;
+}
+
+/* Align toggle button with icons */
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    padding: 15px; /* Same padding as nav-links */
+    cursor: pointer;
+    display: block; /* Show by default */
+    width: 100%;
+    text-align: center;
+}
+
+/* Hide toggle button when expanded */
+#navbarCol.expanded .toggle-btn {
+    display: none;
+}
+
+/* Logo hidden by default */
+#navbarLogo {
+    display: none;
+    text-align: center;
+    cursor: pointer; /* Make clickable */
+}
+
+/* Show logo when expanded */
+#navbarCol.expanded #navbarLogo {
+    display: block;
+}
+
+/* Main Content */
+#content {
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    margin-left: 80px; /* Default collapsed */
+    width: calc(100% - 80px);
+}
+
+/* Expand content when navbar is expanded */
+#navbarCol.expanded ~ #content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
 }
 
 .nav-link:hover {
