@@ -45,7 +45,7 @@
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="../../pages/public/index.html">Log out</a>
+                    <button class="nav-link" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Log out</button>
                 </li>
             </ul>
         </div>
@@ -62,11 +62,31 @@
         </div>
     </div>
 
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="../../script/User/userMap.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
+    <script src="../../script/User/logout.js"></script>
 </body>
 
 </html>
