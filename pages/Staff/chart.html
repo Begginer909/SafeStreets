@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
     <title>Staff Dashboard</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="../../style/styleStaff.css">
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../style/Staff/navbar.css">
+    <link rel="stylesheet" href="../../style/navbar.css">
     <link rel="stylesheet" href="../../style/Staff/dashboard.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -27,10 +28,9 @@
 <div class="container-fluid">  
     
     <div class="row flex-grow-1">
-        <div class="container-fluid">
             <div class="row">
                 <!-- Sidebar -->
-                <div class="col-2" id="navbarCol">
+                <div class="col-2 expanded" id="navbarCol">
                     <nav class="navbar navbar-dark flex-column">
                         <!-- Toggle Button -->
                         <button id="toggleNavbar" class="toggle-btn">
@@ -38,7 +38,7 @@
                         </button>
         
                         <a id="navbarLogo" class="navbar-brand mb-3" href="#">
-                            <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px">
+                            <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px"><hr>
                         </a>
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
@@ -65,7 +65,6 @@
                     </nav>
                 </div>
             </div>
-        </div>
         
         <div class="col-10" id="content">
 

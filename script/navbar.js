@@ -4,8 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let toggleButton = document.getElementById("toggleNavbar");
     let logo = document.getElementById("navbarLogo");
 
-    content.style.marginLeft = "80px";
-    content.style.width = "calc(100% - 80px)";
+    // Ensure navbar starts in expanded state
+    navbar.classList.add("expanded");
+    content.style.marginLeft = "250px";
+    content.style.width = "calc(100% - 250px)";
+    toggleButton.style.display = "none"; // Hide button
+    logo.style.display = "block"; // Show logo
 
     function toggleNavbar() {
         navbar.classList.toggle("expanded");
