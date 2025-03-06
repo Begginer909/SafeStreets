@@ -1,5 +1,5 @@
 document.getElementById("confirmLogout").addEventListener("click", function () {
-    fetch('safestreets-production.up.railway.app/logout', {
+    fetch('https://safestreets-production.up.railway.app/logout', {
         method: 'POST',
         credentials: 'include' // Ensures cookies are sent with the request
     })
