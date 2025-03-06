@@ -1,3 +1,4 @@
+
 // Initialize the map
 var map = L.map('map', {
     center: [14.358131750283409, 121.05873048305513],
