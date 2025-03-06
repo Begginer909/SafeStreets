@@ -1,5 +1,5 @@
 // Initialize Socket.IO
-const socket1 = io('http://localhost:3000');
+const socket1 = io('https://safestreets-production.up.railway.app/');
 
 // Listen for new report notifications
 socket1.on('new_notification', () => {
@@ -23,7 +23,7 @@ document.getElementById('notification-card').addEventListener('click', () => {
 
 // Load notifications into modal
 document.getElementById('notification-card').addEventListener('click', async () => {
-    const response = await fetch('http://localhost:3000/populatenotifications');
+    const response = await fetch('https://safestreets-production.up.railway.app/populatenotifications');
     const notifications = await response.json();
     const tbody = document.querySelector('#notification-table tbody');
     tbody.innerHTML = ''; // Clear previous data
@@ -154,7 +154,7 @@ document.addEventListener('click', async (e) => {
         const notificationID = e.target.dataset.id;
 
         // Fetch notification data
-        const response = await fetch('http://localhost:3000/notifications/view', {
+        const response = await fetch('https://safestreets-production.up.railway.app/notifications/view', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ notificationID }),
@@ -166,7 +166,7 @@ document.addEventListener('click', async (e) => {
         modalElement.hide();
 
         if (data.imagePath) {
-            document.getElementById('crimeImage').src = `http://localhost:3000/uploads/${data.imagePath}`;
+            document.getElementById('crimeImage').src = `https://safestreets-production.up.railway.app/uploads/${data.imagePath}`;
             console.log(data.imagePath);
         } else {
             console.log("No image found.");
@@ -193,7 +193,7 @@ document.addEventListener('click', async (e) => {
                 const notificationID = event.target.dataset.id;
     
                 try {
-                    await fetch('http://localhost:3000/notifications/send', {
+                    await fetch('https://safestreets-production.up.railway.app/notifications/send', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ notificationID }),
@@ -229,7 +229,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', async (
     if (notificationToDelete) {
         try {
             // Send DELETE request to server
-            const response = await fetch(`http://localhost:3000/notifications/delete`, {
+            const response = await fetch(`https://safestreets-production.up.railway.app/notifications/delete`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ notificationID: notificationToDelete }),
