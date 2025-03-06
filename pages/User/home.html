@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
+=======
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+>>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
     <title>Home</title>
     
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
@@ -43,7 +47,11 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item me-3">
+<<<<<<< HEAD
                         <a class="nav-link" href="../../index.html">Log out</a>
+=======
+                        <button class="nav-link" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Log out</button>
+>>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
                     </li>
                 </ul>
             </div>
@@ -99,8 +107,27 @@
         </div>
     </div>
 
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
+        </div>
+      </div>
+    </div>
+</div>
+
     <script>
-        const socket = io('https://safestreets-production.up.railway.app');
+        const socket = io('https://safestreets-production.up.railway.app/notifications');
     
         // Listen for new report notifications
         socket.on('incident_confirmed', (data) => {
@@ -118,6 +145,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
     <script src="../../script/script.js"></script>
+<<<<<<< HEAD
+=======
+    <script src="../../script/User/logout.js"></script>
+>>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
 </body>
 
 </html>

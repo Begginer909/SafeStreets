@@ -1,16 +1,50 @@
 // Initialize the map
 var map = L.map('map', {
     center: [14.358131750283409, 121.05873048305513],
-    zoom: 16,
+    zoom: 15,
+    minZoom: 5,
+});
+
+var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
     minZoom: 5,
 });
 
 // Add a tile layer (you can use different tile providers)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     minZoom: 5,
 }).addTo(map);
+
+var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    minZoom: 5,
+});
+
+var baseMaps = {
+    "OpenStreetMap": osmLayer,
+    "Satellite View": satelliteLayer
+};
+
+var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri',
+    maxZoom: 19,
+    minZoom: 5
+});
+
+var osmLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors & CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19,
+    minZoom: 5
+});
+
+var overlayMaps = {
+    "Place Names & Roads (Esri)": labels,
+    "Place Names & Roads (OSM)": osmLabels
+};
+
+L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 // Add an event listener for map clicks
 map.on('click', function(e) {
@@ -21,20 +55,12 @@ map.on('click', function(e) {
     console.log(`Latitude: ${lat}, Longitude: ${lng}`);
 });
 
-var NW = {lat: 14.362964938852976, lng: 121.05478763580324}
-var SE = {lat: 14.348164116301717, lng: 121.06392860412599}
-var W = {lng: 121.05478763580324} // Westernmost latitude
-var E = {lng: 121.06392860412599};   // Southernmost latitude
+var NW = {lat: 14.362964938852976, lng: 121.05478763580324};
+var SE = {lat: 14.348164116301717, lng: 121.06392860412599};
 
-var north = NW.lat;
-var south = SE.lat;
-var west = W.lng;
-var east = E.lng;
-
-// Create a bounds object from these coordinates
 var bounds = L.latLngBounds(
-L.latLng(south, west), // Southwest corner (South, West)
-L.latLng(north, east)  // Northeast corner (North, East)
+    L.latLng(SE.lat, NW.lng), // Southwest
+    L.latLng(NW.lat, SE.lng)  // Northeast
 );
 
 // Set the bounds on the map

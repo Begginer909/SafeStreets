@@ -14,6 +14,7 @@
     display: inline-block;
   }
 
+<<<<<<< HEAD
   .modal {
     display: none; 
     position: fixed; 
@@ -27,6 +28,8 @@
     background-color: rgba(0,0,0,0.4); 
 }
 
+=======
+>>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
 .modal-content {
     background-color: #fefefe;
     margin: 15% auto; 

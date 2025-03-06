@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
     <title>Admin Dashboard</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="../../style/styleStaff.css">
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../style/Admin/navbar.css">
+    <link rel="stylesheet" href="../../style/navbar.css">
     <link rel="stylesheet" href="../../style/Admin/dashboard.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -37,29 +38,41 @@
 <div class="container-fluid">  
     
     <div class="row flex-grow-1">
-        <div class="col-2" id="navbarCol">
-            <nav class="navbar navbar-dark flex-column">
-                <a class="navbar-brand mb-3" href="#">
-                    <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px"><hr>
-                </a>
-                <ul class="navbar-nav flex-column">
-                    <li class="nav-item active">
-                        <a class="nav-link active" href="home.html"><i class="fas fas fa-tachometer-alt"></i>Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="adminAccount.html"><i class="fas fa-user"></i>Accounts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="chart.html"><i class="fas fa-chart-bar"></i>Statistics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="map.html"><i class="fas fa-map"></i>Crime Density Map</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="AdminLogin.html"><i class="fas fa-sign-out-alt"></i>Sign Out</a>
-                    </li>
-                </ul>
-            </nav>
+        <div class="row">
+            <div class="col-2 expanded" id="navbarCol">
+                <nav class="navbar navbar-dark flex-column">
+                    <!-- Toggle Button -->
+                    <button id="toggleNavbar" class="toggle-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+    
+                    <a id="navbarLogo" class="navbar-brand mb-3" href="#">
+                        <img src="../../Logo.png" alt="Safe Street Logo" class="img-fluid" width="150px"><hr>
+                    </a>
+                    <ul class="navbar-nav flex-column">
+                        <li class="nav-item active">
+                            <a class="nav-link active" href="home.html">
+                            <i class="fas fas fa-tachometer-alt"></i><span class="nav-text">Dashboard</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="adminAccount.html">
+                            <i class="fas fa-user"></i><span class="nav-text">Accounts</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="chart.html">
+                            <i class="fas fa-chart-bar"></i><span class="nav-text">Statistics</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="map.html">
+                            <i class="fas fa-map"></i><span class="nav-text">Crime Density Map</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt"></i><span class="nav-text">Sign Out</span></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
 
         <div class="col-10" id="content">
@@ -142,13 +155,14 @@
             <div class="modal-body">
                 <table id="notification-table" class="table table-bordered table-hover table-responsive">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>Account ID</th>
                             <th>Witness Name</th>
                             <th>Contact</th>
                             <th>Type of Crime</th>
                             <th>Description</th>
                             <th>Location</th>
+                            <th>Image Path</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -235,7 +249,12 @@
         <div class="modal-content">
             <!-- Close button styled and positioned to the top-right -->
             <button type="button" class="custom-close" aria-label="Close">&times;</button>
-            <div id="map1" style="height: 400px; width: 100%;"></div>
+            <div class="text-center">
+                <h1 class="py-2">Crime Image<hr></h1>
+                <img id="crimeImage" src="" alt="Crime Image" height="300" width="600"><br>   
+                <h1 class="mt-4 py-2">Location of Report<hr></h1>
+                <div id="map1" style="height: 400px; width: 100%;"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -293,11 +312,17 @@
                         <label for="crimeTypeFilter" class="form-label">Filter by Crime Type</label>
                         <select id="crimeTypeFilter" class="form-select">
                             <option value="">All</option>
-                            <option value="Theft">Theft</option>
-                            <option value="Assault">Assault</option>
-                            <option value="Burglary">Burglary</option>
-                            <option value="Vandalism">Vandalism</option>
-                            <!-- Add more crime types as needed -->
+                            <option value="flytipping">Fly tipping</option>
+                            <option value="sexual_assault">Sexual Assault</option>
+                            <option value="violent">Violent</option>
+                            <option value="petty">Petty</option>
+                            <option value="drug_offences">Drug offences</option>
+                            <option value="murder">Murder</option>
+                            <option value="prostitution">Prostitution</option>
+                            <option value="theft">Theft</option>
+                            <option value="drunk_driving">Drunk Driving</option>
+                            <option value="robbery">Robbery</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
                     <div class="col-auto">
@@ -383,12 +408,33 @@
     </div>
 </div>
 
+<!-- Logout Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to logout?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmLogout">Logout</button>
+        </div>
+      </div>
+    </div>
+</div>
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="../../bootstrap/js/bootstrap.js"></script>
     <script src="../../script/Staff/list.js"></script>
     <script src="../../script/Staff/staffMap.js"></script>
     <script src="../../script/Staff/createReport.js"></script>
     <script src="../../script/print.js"></script>
-    <script src="../../script/Staff/scriptNotification.js"></script>
+    <script src="../../script/scriptNotification.js"></script>
+    <script src="../../script/navbar.js"></script>
+    <script src="../../script/Admin/logout.js"></script>
 </body>
 </html>	

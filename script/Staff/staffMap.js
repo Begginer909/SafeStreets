@@ -5,12 +5,46 @@ var map = L.map('map', {
     minZoom: 5,
 });
 
+var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  minZoom: 5,
+});
+
 // Add a tile layer (you can use different tile providers)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-    minZoom: 5,
+var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  minZoom: 5,
 }).addTo(map);
+
+var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 19,
+  minZoom: 5,
+});
+
+var baseMaps = {
+  "OpenStreetMap": osmLayer,
+  "Satellite View": satelliteLayer
+};
+
+var labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Esri',
+  maxZoom: 19,
+  minZoom: 5
+});
+
+var osmLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap contributors & CARTO',
+  subdomains: 'abcd',
+  maxZoom: 19,
+  minZoom: 5
+});
+
+var overlayMaps = {
+  "Place Names & Roads (Esri)": labels,
+  "Place Names & Roads (OSM)": osmLabels
+};
+
+L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 // Add an event listener for map clicks
 map.on('click', function(e) {
