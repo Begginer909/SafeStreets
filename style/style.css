@@ -1,21 +1,13 @@
 #map{
     width: 100%; /* Full width */
-<<<<<<< HEAD
-    height: 60vh; /* 60% of the viewport height */
-=======
     height: 80vh; /* 60% of the viewport height */
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
     border: 1px solid #ccc; /* Optional: Add a border for visibility */
 }
 
 /* Optional: Adjust the map container for smaller screens */
 @media (max-width: 576px) {
     #map {
-<<<<<<< HEAD
-        height: 40vh; /* Reduce height on small screens */
-=======
         height: 60vh; /* Reduce height on small screens */
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
     }
 }
 
@@ -39,8 +31,6 @@
     transition: width 0.5s ease; /* Smooth transition for the width adjustment */
 }
 
-<<<<<<< HEAD
-=======
 h1 {
     text-align: center;
     color: #333;
@@ -48,4 +38,3 @@ h1 {
     border-bottom: 2px solid #aaa;
     padding-bottom: 10px;
 }
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d

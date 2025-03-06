@@ -1,21 +1,14 @@
 body {
-<<<<<<< HEAD
-    display: flex;
-=======
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
 }
 
-<<<<<<< HEAD
-=======
 html, body {
     overflow-x: hidden; /* Prevent horizontal scroll */
     width: 100%;
 }
 
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
 #content {
     margin-left: 250px; /* Leave space for the sidebar */
     padding: 20px;
@@ -33,10 +26,7 @@ html, body {
 }
 
 .card:hover {
-<<<<<<< HEAD
-=======
     transform: scale(1.05); /* Scale effect on hover */
->>>>>>> 7316d89548000314a15045f7b5540aad58de1d1d
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
 }
 
