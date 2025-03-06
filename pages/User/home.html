@@ -120,7 +120,7 @@
 </div>
 
     <script>
-        const socket = io('https://safestreets-production.up.railway.app/notifications');
+        const socket = io('https://safestreets-production.up.railway.app');
     
         // Listen for new report notifications
         socket.on('incident_confirmed', (data) => {
