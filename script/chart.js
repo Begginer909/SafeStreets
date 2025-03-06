@@ -7,7 +7,7 @@
       // Fetch and update chart data
       const fetchChartData = async (timeFrame, startDate, endDate, viewMode) => {
         try {
-          const response = await fetch('http://localhost:3000/api/reports', {
+          const response = await fetch('safestreets-production.up.railway.app/api/reports', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ timeFrame, startDate, endDate, viewMode }),
