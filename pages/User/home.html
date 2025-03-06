@@ -119,18 +119,35 @@
     </div>
 </div>
 
+<!--Notification Modal-->
+
+<div id="customModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; border:1px solid #ccc; padding:20px; z-index:1000;">
+    <p id="modalDescription"></p>
+    <button id="modalConfirm">OK</button>
+    <button id="modalCancel">Cancel</button>
+</div>
+
     <script>
         const socket = io('https://safestreets-production.up.railway.app');
-    
+
         // Listen for new report notifications
         socket.on('incident_confirmed', (data) => {
-            const userConfirmed = confirm(data.description + "\nClick OK to view the map.");
-            if (userConfirmed) {
+            // Show the custom modal
+            document.getElementById('modalDescription').innerText = data.description + "\nClick OK to view the map.";
+            document.getElementById('customModal').style.display = 'block';
+
+            // Handle the confirm button
+            document.getElementById('modalConfirm').onclick = () => {
                 const reportId = data.circleID;
                 const reportDescription = encodeURIComponent(data.description);
                 const reportLocation = encodeURIComponent(JSON.stringify({ lat: data.latitude, lng: data.longitude }));
                 window.location.href = `map.html?reportId=${reportId}&description=${reportDescription}&location=${reportLocation}`;
-            }
+            };
+
+            // Handle the cancel button
+            document.getElementById('modalCancel').onclick = () => {
+                document.getElementById('customModal').style.display = 'none';
+            };
         });
     </script>
 
