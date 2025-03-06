@@ -20,12 +20,6 @@
       };
       
 const updateChart = (data, viewMode, timeFrame) => {
-
-      // Helper to format dates for display
-      const formatDateLabel = (dateStr) => {
-        const date = new Date(dateStr);
-        return new Intl.DateTimeFormat('en-PH', { month: 'short', day: 'numeric', year:'numeric'}).format(date);
-      };
     
       // Helper function to capitalize each word in the crimeType
       const capitalize = (str) => {
@@ -42,7 +36,7 @@ const updateChart = (data, viewMode, timeFrame) => {
         const circleIDs = [...new Set(filteredData.map(item => item.area))]; // Unique circle IDs
         const datasets = [];
         
-        const threshold = timeFrame === 'year' ? 100 : 
+        const threshold = timeFrame === 'year' ? 1000 : 
                   timeFrame === 'month' ? 78 : 40; // Initialize threshold value 
       
         if(timeFrame == 'year'){
@@ -128,12 +122,11 @@ const updateChart = (data, viewMode, timeFrame) => {
               });
             }
             else{
-              // Create a dataset for each circleID
               circleIDs.forEach(circleID => {
                 const datasetData = labels.map(date => {
-                  const entry = data.find(item => item.date.startsWith(date)); // Match by month
-                  return entry ? Number(entry.totalReportMonth) : 0;
-                });                
+                  const entry = data.find(item => item.date === date && item.area === circleID);
+                  return entry ? Number(entry.totalReportArea) : 0; // Count for this date and circleID
+                });
 
                 // Calculate total count for this circleID
                 const totalCount = datasetData.reduce((sum, count) => sum + count, 0);
@@ -151,12 +144,13 @@ const updateChart = (data, viewMode, timeFrame) => {
                   borderWidth: 1,
                   counts: datasetData, // Set counts for later use
                   totalCount 
-                  });
                 });
-              }
+              });
+            }
+              // Sort datasets based on totalCount in descending order
+              datasets.sort((a, b) => b.totalCount - a.totalCount);
 
-                // Sort datasets based on totalCount in descending order
-                datasets.sort((a, b) => b.totalCount - a.totalCount);
+              console.log("Time Frame: " + timeFrame);
           }
           else if(timeFrame == 'day'){
             if(viewMode == 'total'){
@@ -212,13 +206,15 @@ const updateChart = (data, viewMode, timeFrame) => {
               }
                 // Sort datasets based on totalCount in descending order
                 datasets.sort((a, b) => b.totalCount - a.totalCount);
+
+                console.log("Time Frame: " + timeFrame);
           }
 
         // Dynamically adjust the chart's width
         const canvas = document.getElementById('crimeChart');
       
         const chartWidth = Math.max(900, labels.length * 80); // 80px per label
-        const chartHeight = 400; // Fixed height in pixels
+        const chartHeight = 500; // Fixed height in pixels
       
         canvas.style.width = `${chartWidth}px`; // CSS width
         canvas.style.height = `${chartHeight}px`; // CSS height
@@ -250,23 +246,26 @@ const updateChart = (data, viewMode, timeFrame) => {
               x: {
                 maxRotation: 90,
                 minRotation: 45,
-                type: 'category',
                 
                 ticks:{
-                  maxTicksLimit: timeFrame === 'day' ? 31 : timeFrame === 'month' ? 12 : 5,
-
+                  font: {
+                    size: Math.max(10, Math.min(14, chartHeight / 20)), // Adjust font size based on height
+                  },
                   callback: function (index) {
                     const dataset = this.chart.data.datasets;
                     const hasValue = dataset.some(ds => ds.data[index] > 0);
                     if (!hasValue) return '';
+
+                    const rawDate = labels[index];
+                    const date = new Date(rawDate);
                     
-                    // Format X-axis labels based on selected timeframe
-                    const date = labels[index];
-                    if (timeFrame === 'day') return formatDate(date, 'MM-DD-YY'); // Example: "01-25-25"
-                    if (timeFrame === 'month') return date.toLocaleString('default', { month: 'short', year: 'numeric' }); // Example: "Jan 2025"
-                    if (timeFrame === 'year') return date.getFullYear().toString(); // Example: "2025"
+                    console.log("Raw value:", rawDate, "Parsed date:", date);
+
+                    if (timeFrame === 'day') return formatDate(new Date(date), 'MM-DD-YY');
+                    if (timeFrame === 'month') return new Date(date).toLocaleString('default', { month: 'short', year: 'numeric' });
+                    if (timeFrame === 'year') return rawDate;
+
                     
-                    return labels[index]; // Fallback to default
                   }
                 },
               },
@@ -275,6 +274,9 @@ const updateChart = (data, viewMode, timeFrame) => {
                   max: 100,
                   ticks: {
                     callback: value => `${value}%`,
+                    font: {
+                      size: Math.max(10, Math.min(14, chartHeight / 20)), // Adjust font size based on height
+                  },
                 },
               },
             },
@@ -287,17 +289,15 @@ const updateChart = (data, viewMode, timeFrame) => {
                   title: function (tooltipItems) {
                     // Get the date from the tooltip label
                     const rawDate = tooltipItems[0].label;
+                    const dateObj = new Date(rawDate);
                     
                     if (timeFrame == "month") {
-                      const dateObj = new Date(rawDate);
                       return dateObj.toLocaleString('default', { year: 'numeric', month: 'long' });
                     }
                     else if(timeFrame == "year"){
-                      const dateObj = new Date(rawDate);
                       return dateObj.toLocaleString('default', { year: 'numeric'});
                     }
                     else{
-                      const dateObj = new Date(rawDate);
                       return dateObj.toLocaleString('default', { year: 'numeric', day: 'numeric', month: 'long'}); 
                     }
                   },
@@ -328,7 +328,7 @@ const updateChart = (data, viewMode, timeFrame) => {
 
                       // Format total count
                       if (viewMode === 'total') {
-                          const summary = [`Total Counts: ${totalReports}`];
+                          const summary = [`Total Counts: ${totalReports} Percentage: ${percentage}%`];
 
                           Object.entries(areaGroups).forEach(([areaID, areaData]) => {
                               // Find top crime(s)
@@ -405,6 +405,13 @@ const updateChart = (data, viewMode, timeFrame) => {
             },
           },
         });
+
+  // Add event listener for window resize
+  window.addEventListener('resize', () => {
+    if (chart) {
+        chart.resize();
+    }
+  });
 
   // Function to format date dynamically
   function formatDate(date, format) {
