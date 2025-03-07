@@ -1,5 +1,5 @@
 // Fetch data from the backend API
-fetch('https://safestreets-production.up.railway.app/userAccount/User')
+fetch('https://safestreets-production.up.railway.app/login/User')
 .then(response => response.json())
 .then(data => {
     const tableBody = document.getElementById('taskTable').querySelector('tbody');
